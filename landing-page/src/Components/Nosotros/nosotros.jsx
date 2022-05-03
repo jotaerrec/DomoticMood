@@ -1,12 +1,8 @@
-import React from 'react'
-import styles from "./styles.modules.scss";
+import React from "react";
+import styles from "./styles.module.scss";
 
-function Nosotros() {
-  return (
-    <section>
-      <img src="" alt="" />
-    </section>
-  )
-}
+const Nosotros = () => {
+  return <section className={styles.sect}></section>;
+};
 
 export default Nosotros;

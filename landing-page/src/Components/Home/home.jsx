@@ -1,12 +1,13 @@
-import React from 'react'
-import "./styles.modules.scss";
+import React from "react";
+import styles from "./styles.module.scss";
 
-function Home() {
+const Home = () => {
   return (
-    <section className="homeSection">
-      <h1>DomoticMood</h1>
-    </section>
-  )
-}
+    <div className={styles.background}>
+      <img src={window.location.origin + "/img/676481.jpg"} alt="" />
+      <div className={styles.layer}></div>
+    </div>
+  );
+};
 
 export default Home;
