@@ -1,18 +1,17 @@
-const io = require( "socket.io" )();
+const io = require("socket.io")();
 const socketapi = {
-    io: io
-}; 
- 
+  io: io,
+};
+
 // Add your socket.io logic here!
-io.on( "connection", function( socket ) {
-    console.log( "A user connected", socket.id);
-    socket.on("error", (err) => {
-        console.log(err.stack);
-      });
-});
-io.on("error", (err) => {
-    console.log(err.stack);
+io.on("connection", function (socket) {
+  socket.on("event_name", (data) => {
+    console.log(data);
+  });
+  console.log("A user connected", socket.id);
+  socket.emit("PONG", "PING");
+  socket.emit("PING", "PONG");
 });
 // end of socket.io logic
 
-module.exports = socketapi; 
+module.exports = socketapi;

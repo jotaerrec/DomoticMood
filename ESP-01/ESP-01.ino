@@ -1,92 +1,163 @@
+/*
+ * WebSocketClientSocketIO.ino
+ *
+ *  Created on: 06.06.2016
+ *
+ */
+
+#include <Arduino.h>
+
 #include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
+
+#include <ArduinoJson.h>
+
 #include <WebSocketsClient.h>
+#include <SocketIOclient.h>
 
-WebSocketsClient webSocket;
+#include <Hash.h>
 
-boolean handshakeFailed=0;
-String data= "";
-char path[] = "/";   //identifier of this device
-const char* ssid     = "TeleCentro-9d10";
-const char* password = "KZM4EWYJRTM5";
-char* host = "192.168.0.171";  //replace this ip address with the ip address of your Node.Js server
-const int espport= 3000;
+ESP8266WiFiMulti WiFiMulti;
+SocketIOclient socketIO;
 
-unsigned long messageInterval = 5000;
-bool connected = false;
- 
-#define DEBUG_SERIAL Serial
- 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+#define USE_SERIAL Serial
+void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
     switch(type) {
-        case WStype_DISCONNECTED:
-            DEBUG_SERIAL.printf("[WSc] Disconnected!\n");
-            connected = false;
+        case sIOtype_DISCONNECT:
+            USE_SERIAL.printf("[IOc] Disconnected!\n");
             break;
-        case WStype_CONNECTED: {
-            DEBUG_SERIAL.printf("[WSc] Connected to url: %s\n", payload);
-            connected = true;
- 
-            // send message to server when Connected
-            DEBUG_SERIAL.println("[WSc] SENT: Connected");
-            webSocket.sendTXT("Connected");
+        case sIOtype_CONNECT:
+            USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
+
+            // join default namespace (no auto join in Socket.IO V3)
+            socketIO.send(sIOtype_CONNECT, "/");
+            break;
+        case sIOtype_EVENT:
+        {
+            char * sptr = NULL;
+            int id = strtol((char *)payload, &sptr, 10);
+            USE_SERIAL.printf("[IOc] get event: %s id: %d\n", payload, id);
+            if(id) {
+                payload = (uint8_t *)sptr;
+            }
+            DynamicJsonDocument doc(1024);
+            DeserializationError error = deserializeJson(doc, payload, length);
+            if(error) {
+                USE_SERIAL.print(F("deserializeJson() failed: "));
+                USE_SERIAL.println(error.c_str());
+                return;
+            }
+
+            String eventName = doc[0];
+            USE_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
+            String responseData = doc[1];
+            USE_SERIAL.printf("Response name %s\n", responseData.c_str());
+            // Message Includes a ID for a ACK (callback)
+            if(id) {
+                // creat JSON message for Socket.IO (ack)
+                DynamicJsonDocument docOut(1024);
+                JsonArray array = docOut.to<JsonArray>();
+
+                // add payload (parameters) for the ack (callback function)
+                JsonObject param1 = array.createNestedObject();
+                param1["now"] = millis();
+
+                // JSON to String (serializion)
+                String output;
+                output += id;
+                serializeJson(docOut, output);
+
+                // Send event
+                socketIO.send(sIOtype_ACK, output);
+            }
         }
             break;
-        case WStype_TEXT:
-            DEBUG_SERIAL.printf("[WSc] RESPONSE: %s\n", payload);
-            break;
-        case WStype_BIN:
-            DEBUG_SERIAL.printf("[WSc] get binary length: %u\n", length);
+        case sIOtype_ACK:
+            USE_SERIAL.printf("[IOc] get ack: %u\n", length);
             hexdump(payload, length);
             break;
-                case WStype_PING:
-                        // pong will be send automatically
-                        DEBUG_SERIAL.printf("[WSc] get ping\n");
-                        break;
-                case WStype_PONG:
-                        // answer to a ping we send
-                        DEBUG_SERIAL.printf("[WSc] get pong\n");
-                        break;
+        case sIOtype_ERROR:
+            USE_SERIAL.printf("[IOc] get error: %u\n", length);
+            hexdump(payload, length);
+            break;
+        case sIOtype_BINARY_EVENT:
+            USE_SERIAL.printf("[IOc] get binary: %u\n", length);
+            hexdump(payload, length);
+            break;
+        case sIOtype_BINARY_ACK:
+            USE_SERIAL.printf("[IOc] get binary ack: %u\n", length);
+            hexdump(payload, length);
+            break;
     }
- 
 }
- 
+
 void setup() {
-    DEBUG_SERIAL.begin(9600);
- 
-//  DEBUG_SERIAL.setDebugOutput(true);
- 
-    DEBUG_SERIAL.println();
-    DEBUG_SERIAL.println();
-    DEBUG_SERIAL.println();
- 
-    for(uint8_t t = 4; t > 0; t--) {
-        DEBUG_SERIAL.printf("[SETUP] BOOT WAIT %d...\n", t);
-        DEBUG_SERIAL.flush();
-        delay(1000);
+    // USE_SERIAL.begin(921600);
+    USE_SERIAL.begin(9600);
+
+    //Serial.setDebugOutput(true);
+    USE_SERIAL.setDebugOutput(true);
+
+    USE_SERIAL.println();
+    USE_SERIAL.println();
+    USE_SERIAL.println();
+
+      for(uint8_t t = 4; t > 0; t--) {
+          USE_SERIAL.printf("[SETUP] BOOT WAIT %d...\n", t);
+          USE_SERIAL.flush();
+          delay(1000);
+      }
+
+    // disable AP
+    if(WiFi.getMode() & WIFI_AP) {
+        WiFi.softAPdisconnect(true);
     }
- 
-    WiFi.begin(ssid, password);
- 
-    while ( WiFi.status() != WL_CONNECTED ) {
-      delay ( 500 );
-      Serial.print ( "." );
+
+    WiFiMulti.addAP("TeleCentro-9d10", "KZM4EWYJRTM5");
+
+    //WiFi.disconnect();
+    while(WiFiMulti.run() != WL_CONNECTED) {
+        delay(100);
     }
-    DEBUG_SERIAL.print("Local IP: "); DEBUG_SERIAL.println(WiFi.localIP());
+
+    String ip = WiFi.localIP().toString();
+    USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
+
     // server address, port and URL
-    webSocket.begin(host, espport, path);
- 
+    socketIO.begin("192.168.0.45", 3000, "/socket.io/?EIO=4");
+
     // event handler
-    webSocket.onEvent(webSocketEvent);
+    socketIO.onEvent(socketIOEvent);
 }
- 
-unsigned long lastUpdate = millis();
- 
- 
+
+unsigned long messageTimestamp = 0;
 void loop() {
-    webSocket.loop();
-    if (connected && lastUpdate+messageInterval<millis()){
-        DEBUG_SERIAL.println("[WSc] SENT: Simple js client message!!");
-        webSocket.sendTXT("Simple js client message!!");
-        lastUpdate = millis();
-    }
+    socketIO.loop();
+}
+
+void emit(const String event, const String payload)
+{
+
+        // creat JSON message for Socket.IO (event)
+        DynamicJsonDocument doc(1024);
+        JsonArray array = doc.to<JsonArray>();
+
+        // add evnet name
+        // Hint: socket.on('event_name', ....
+        array.add(event);
+
+        // add payload (parameters) for the event
+        JsonObject param1 = array.createNestedObject();
+        param1["now"] = payload;
+
+        // JSON to String (serializion)
+        String output;
+        serializeJson(doc, output);
+
+        // Send event
+        socketIO.sendEVENT(output);
+
+        // Print JSON for debugging
+        USE_SERIAL.println(output);
+    
 }
