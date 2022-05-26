@@ -10,6 +10,9 @@ io.on("connection", function (socket) {
   });
   console.log("A user connected", socket.id);
   socket.emit("PONG", "PING");
+  socket.on("responsePong", data1 =>{
+    console.log(data1)
+  })
   socket.emit("PING", "PONG");
 });
 // end of socket.io logic

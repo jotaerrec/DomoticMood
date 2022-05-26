@@ -1,9 +1,3 @@
-/*
- * WebSocketClientSocketIO.ino
- *
- *  Created on: 06.06.2016
- *
- */
 
 #include <Arduino.h>
 
@@ -21,6 +15,14 @@ ESP8266WiFiMulti WiFiMulti;
 SocketIOclient socketIO;
 
 #define USE_SERIAL Serial
+/// WIFI Settings ///
+const char* ssid     = "@javi.jpg_";
+const char* pass     = "123456789";
+/// SocketIO Settings ///
+const char* host  = "192.168.43.97"; // Socket.IO Server Address
+int port = 3000; // Socket.IO Port Address
+const char* path = "/socket.io/?EIO=4"; 
+
 void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
     switch(type) {
         case sIOtype_DISCONNECT:
@@ -53,6 +55,10 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
             String responseData = doc[1];
             USE_SERIAL.printf("Response name %s\n", responseData.c_str());
             // Message Includes a ID for a ACK (callback)
+            if(eventName == "PING")
+            {
+              emitSocket("responsePong", "PONG");
+            }
             if(id) {
                 // creat JSON message for Socket.IO (ack)
                 DynamicJsonDocument docOut(1024);
@@ -92,7 +98,6 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
 }
 
 void setup() {
-    // USE_SERIAL.begin(921600);
     USE_SERIAL.begin(9600);
 
     //Serial.setDebugOutput(true);
@@ -113,7 +118,7 @@ void setup() {
         WiFi.softAPdisconnect(true);
     }
 
-    WiFiMulti.addAP("TeleCentro-9d10", "KZM4EWYJRTM5");
+    WiFiMulti.addAP(ssid, pass);
 
     //WiFi.disconnect();
     while(WiFiMulti.run() != WL_CONNECTED) {
@@ -124,7 +129,7 @@ void setup() {
     USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
 
     // server address, port and URL
-    socketIO.begin("192.168.0.45", 3000, "/socket.io/?EIO=4");
+    socketIO.begin(host, 3000, path);
 
     // event handler
     socketIO.onEvent(socketIOEvent);
@@ -135,7 +140,7 @@ void loop() {
     socketIO.loop();
 }
 
-void emit(const String event, const String payload)
+void emitSocket(const String event, const String payload)
 {
 
         // creat JSON message for Socket.IO (event)
