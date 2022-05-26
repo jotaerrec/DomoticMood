@@ -10,7 +10,7 @@ const sendSocket = ()=> {
 const App = () => {
   const [response, setResponse] = useState("");
   
-  useEffect(() => {
+  useEffect(() =>   {
   }, []);
   return (
     
