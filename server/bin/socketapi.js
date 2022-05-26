@@ -3,6 +3,7 @@ const socketapi = {
   io: io,
 };
 
+<<<<<<< HEAD
 // Add your socket.io logic here!
 io.on("connection", function (socket) {
   socket.on("event_name", (data) => {
@@ -16,5 +17,8 @@ io.on("connection", function (socket) {
   socket.emit("PING", "PONG");
 });
 // end of socket.io logic
+=======
+
+>>>>>>> gitnote
 
 module.exports = socketapi;
