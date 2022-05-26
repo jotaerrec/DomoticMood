@@ -1,15 +1,22 @@
 import { useState } from "react";
+import socketIOClient from "socket.io-client";
 import "./App.css";
 import styles from "./styles.module.scss";
 import { CardMenu } from "./Components/CardMenu/index";
 import { HomeCard } from "./Components/HomeCard/index";
+const ENDPOINT = "http://192.168.43.97:3001/socket.io/?EIO=4";
+const socket = socketIOClient(ENDPOINT);
 
-const App = () => {
+const sendSocket = ()=> {
+  socket.emit("responsePong", "reactjs") 
+}
+
+const App = () => { 
   const [hamburger, setHamburger] = useState({
     open: false,
   });
-
-  return (
+  sendSocket();
+  return (  
     <>
       <div className={styles.Home}>
         <div className={styles.Card}>
