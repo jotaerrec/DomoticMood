@@ -1,11 +1,14 @@
 import React, { useRef } from "react";
 import styles from "./styles.module.scss";
+import socket from "../../Controllers/socketapi";
+
 export const Switch = ({ data }) => {
   const inputRef = useRef();
   let value = data.value;
-  const activarRelay = (order) => {
+  const activarRelay = () => {
     value = !value;
     inputRef.current.checked = value;
+    socket.emit("SwitchChange",`Switch=[${data.order}, ${value}]`);
   };
   return (
     <>

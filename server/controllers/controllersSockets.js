@@ -1,4 +1,4 @@
-const socketapi = require("../bin/socketapi");
+/* const socketapi = require("../bin/socketapi");
 
 
 socketapi.io.on('connection', function(socket){
@@ -12,4 +12,4 @@ socketapi.io.on('responsePong', function(socket){
 })
 socketapi.io.on("close", function(socket){
   console.log("User Disconnect ", socket.id)
-})
+}) */
