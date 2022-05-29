@@ -1,0 +1,154 @@
+.sliderContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 40px;
+
+  .range {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 200px;
+    margin-left: 8px;
+  }
+
+  h1 {
+    color: aliceblue;
+  }
+
+  input[type="range"] {
+    &::-webkit-slider-runnable-track {
+      -webkit-appearance: none;
+      background: rgb(145, 201, 124);
+      background: -moz-linear-gradient(
+        90deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      background: -webkit-gradient(
+        left bottom,
+        right top,
+        color-stop(0%, rgba(145, 201, 124, 1)),
+        color-stop(25%, rgba(67, 210, 13, 1)),
+        color-stop(51%, rgba(255, 74, 2, 1)),
+        color-stop(100%, rgba(0, 212, 255, 1))
+      );
+      background: -webkit-linear-gradient(
+        90deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      background: -o-linear-gradient(
+        90deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      background: -ms-linear-gradient(
+        90deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      background: linear-gradient(
+        90deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3bade3 ', endColorstr='#ff357f ', GradientType=1 );
+      height: 2px;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-moz-range-track {
+      -moz-appearance: none;
+      background: rgb(145, 201, 124);
+      background: -moz-linear-gradient(
+        45deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      background: -webkit-gradient(
+        left bottom,
+        right top,
+        color-stop(0%, rgba(145, 201, 124, 1)),
+        color-stop(25%, rgba(67, 210, 13, 1)),
+        color-stop(51%, rgba(255, 74, 2, 1)),
+        color-stop(100%, rgba(0, 212, 255, 1))
+      );
+      background: -webkit-linear-gradient(
+        45deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      background: -o-linear-gradient(
+        45deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      background: -ms-linear-gradient(
+        45deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      background: linear-gradient(
+        45deg,
+        rgba(145, 201, 124, 1) 0%,
+        rgba(67, 210, 13, 1) 23%,
+        rgba(255, 74, 2, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3bade3 ', endColorstr='#ff357f ', GradientType=1 );
+      height: 2px;
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      border: 2px solid;
+      border-radius: 50%;
+      height: 25px;
+      width: 25px;
+      max-width: 80px;
+      position: relative;
+      bottom: 11px;
+      background-color: #1d1c25;
+      cursor: -webkit-grab;
+
+      -webkit-transition: border 1000ms ease;
+      transition: border 1000ms ease;
+    }
+
+    &::-moz-range-thumb {
+      -moz-appearance: none;
+      border: 2px solid;
+      border-radius: 50%;
+      height: 25px;
+      width: 25px;
+      max-width: 80px;
+      position: relative;
+      bottom: 11px;
+      background-color: #1d1c25;
+      cursor: -moz-grab;
+      -moz-transition: border 1000ms ease;
+      transition: border 1000ms ease;
+    }
+  }
+}

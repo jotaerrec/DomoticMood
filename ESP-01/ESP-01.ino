@@ -127,12 +127,13 @@ void setup() {
 
     String ip = WiFi.localIP().toString();
     USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
-
     // server address, port and URL
     socketIO.begin(host, 3000, path);
 
     // event handler
     socketIO.onEvent(socketIOEvent);
+
+    emitSocket("ConfigureAtmega", "$2a$12$8yibsMKrr/CFAKwk1y6TdOiN85crdCc9228cCiaaZ9djucC4fe1he");
 }
 
 unsigned long messageTimestamp = 0;
