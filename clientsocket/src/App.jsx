@@ -3,13 +3,12 @@ import "./App.css";
 import styles from "./styles.module.scss";
 import { CardMenu } from "./Components/CardMenu/index";
 import { HomeCard } from "./Components/HomeCard/index";
-import socket from "./Controllers/socketapi"
 
-const App = () => { 
+const App = () => {
   const [hamburger, setHamburger] = useState({
     open: false,
   });
-  return (  
+  return (
     <>
       <div className={styles.Home}>
         <div className={styles.Card}>
