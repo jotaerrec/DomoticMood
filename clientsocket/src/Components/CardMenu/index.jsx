@@ -1,7 +1,12 @@
-import React from "react";
+import React, {useState, useContext} from "react";
 import styles from "./styles.module.scss";
+import {ScreenContext} from '../../context/ScreenContext';
+
 
 export const CardMenu = () => {
+  const [Screen, setScreen] = useState({
+    on: "home",
+  })
   return (
     <div className={styles.cardMenu}>
       <ul>

@@ -7,12 +7,13 @@ export const Slider = ({ data }) => {
   const [intervalId, setIntervalId] = useState(0);
 
   const inputRef = useRef();
-  const handleChange = (newValue) => {
+  const handleChange = ()=> {
     let value = parseInt(inputRef.current.value);
     setValue(value);
   };
   const subtractValue = () => {
     let value = parseInt(inputRef.current.value);
+        
     if (value >= 10) {
       setValue(value - 5);
     } else if (value !== 0) {
@@ -21,7 +22,6 @@ export const Slider = ({ data }) => {
   };
   const addValue = () => {
     let value = parseInt(inputRef.current.value);
-
     if (value <= 90) {
       setValue(value + 5);
     } else if (value !== 100) {
@@ -43,6 +43,16 @@ export const Slider = ({ data }) => {
                 subtractValue();
               }, 200)
             );
+          }}
+          onTouchStartCapture={() => {
+            setIntervalId(
+              setInterval(() => {
+                subtractValue();
+              }, 200)
+            );
+          }}
+          onTouchEndCapture={() => {
+            clearInterval(intervalId);
           }}
         >
           <svg
@@ -77,6 +87,16 @@ export const Slider = ({ data }) => {
                 addValue();
               }, 200)
             );
+          }}
+          onTouchStartCapture={() => {
+            setIntervalId(
+              setInterval(() => {
+                addValue();
+              }, 200)
+            );
+          }}
+          onTouchEndCapture={() => {
+            clearInterval(intervalId);
           }}
         >
           <svg

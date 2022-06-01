@@ -103,6 +103,8 @@
       border-radius: 7px;
       background: #65001c;
       cursor: pointer;
+      transition: all 450ms ease-in-out;
+      
     }
     &::-ms-track {
       width: 100%;
@@ -148,6 +150,7 @@
       border-radius: 7px;
       background: #65001c;
       cursor: pointer;
+      transition: all 450ms ease-in-out;
     }
     &:focus::-ms-fill-lower {
       background: rgb(145, 201, 124);
