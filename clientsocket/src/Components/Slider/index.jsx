@@ -30,7 +30,7 @@ export const Slider = ({ data }) => {
   };
   return (
     <>
-      <div className={styles.sliderContainer}>
+      <li className={styles.sliderContainer}>
         <button
           className={styles.leftArrow}
           onClick={subtractValue}
@@ -66,7 +66,7 @@ export const Slider = ({ data }) => {
             />
           </svg>
         </button>
-        <span>{Value}</span>
+        {/*<span>{Value}</span>*/}
         <input
           type="range"
           min="0"
@@ -112,7 +112,7 @@ export const Slider = ({ data }) => {
             />
           </svg>
         </button>
-      </div>
+      </li>
     </>
   );
 };
