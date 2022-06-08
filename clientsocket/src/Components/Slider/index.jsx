@@ -7,13 +7,13 @@ export const Slider = ({ data }) => {
   const [intervalId, setIntervalId] = useState(0);
 
   const inputRef = useRef();
-  const handleChange = ()=> {
+  const handleChange = () => {
     let value = parseInt(inputRef.current.value);
     setValue(value);
   };
   const subtractValue = () => {
     let value = parseInt(inputRef.current.value);
-        
+
     if (value >= 10) {
       setValue(value - 5);
     } else if (value !== 0) {
