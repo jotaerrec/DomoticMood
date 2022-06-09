@@ -5,11 +5,11 @@ const bcrypt = require("bcrypt");
 const arduinoCodeSchema = new mongoose.Schema({
   idArduino: {
     type: String,
-    required: true,
+    required: [true, errorMessage.GENERAL.campo_obligatorio],
   },
   use: {
     type: Boolean,
-    required: true,
+    required: [true, errorMessage.GENERAL.campo_obligatorio],
     default: false,
   },
   userRegisterID: {

@@ -30,9 +30,21 @@ module.exports = {
       next(e);
     }
   },
+  updateRooms: async function (req, res, next) {
+    const { userID, roomName, newRoomName } = req.body;
+    try {
+      const document = await Rooms.findOneAndUpdate({ roomName, userID }, { roomName: newRoomName })
+    } catch (error) {
+      next(error)
+    }
+  },
   getAll: async function (req, res) {
     const { userID } = req.body;
-    const { rooms } = await User.findById(userID);
-    response.json(rooms);
+    try {
+      const { rooms } = await User.findById(userID);
+      response.json(rooms);
+    } catch (error) {
+      next(error)
+    }
   },
 };

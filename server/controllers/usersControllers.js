@@ -1,19 +1,31 @@
 const usersModel = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const arduinoCodeModel = require("../models/arduinoCodeModel");
 module.exports = {
   create: async function (req, res, next) {
+    const { name, email, password, arduinoID } = req.body;
     try {
+      const userExist = await usersModel.findOne({ email })
+
+      if (userExist)
+        return res.status(200).json({ error: "This user already exist" })
+
+      const arduinoExist = await arduinoCodeModel.findOne({ arduinoID })
+      if (arduinoExist)
+        return res.status(200).json({ error: "This arduinoCode already in use" })
+
       const user = new usersModel({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        arduinoID: req.body.arduinoID,
+        name,
+        email,
+        password,
+        arduinoID
       });
+
       const document = await user.save();
-      res.json(document);
+      return res.status(200).json(document);
     } catch (e) {
-      res.json({ message: e.message });
+      res.json({ error: e.message });
     }
   },
   login: async (req, res, next) => {
@@ -35,12 +47,11 @@ module.exports = {
         {}
       );
 
-      res.json({
+      return res.status(204).json({
         error: false,
         message: "Login ok",
         token: token,
       });
-      return;
     } catch (e) {
       res.status(401).json({ message: e.message });
     }

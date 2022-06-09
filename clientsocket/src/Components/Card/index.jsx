@@ -1,72 +1,78 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { CardMenu } from "../CardMenu/index";
 import CardScreen from "../CardScreen";
 import { HomeCard } from "../HomeCard/index";
 import { ScreenContext } from "../../context/Screen/ScreenContext";
-import { HOME, MENU } from "../../context/types";
+import { HOME, MENU, LOGIN } from "../../context/types";
 import styles from "./styles.module.scss";
+import TopCard from "../TopCard";
+import LoginCard from "../Login";
+
 export const Card = () => {
   const { screen, setDisplayName } = useContext(ScreenContext);
   const [hamburger, setHamburger] = useState({
     open: false,
   });
-  let cardTitle = "DomoticMood";
+  const [token, setToken] = useState(null);
   const switchScreen = () => {
     switch (screen) {
       case HOME:
-        cardTitle = "DomoticMood";
-        return <HomeCard className={styles.homeCard} />;
+        return (
+          <>
+            <TopCard data={{ hamburger: false }} />
+            <HomeCard className={styles.homeCard} />
+          </>
+        );
       case MENU:
-        cardTitle = "DomoticMood";
-        return <CardMenu className={styles.cardMenu} />;
+        return (
+          <>
+            <TopCard data={{ hamburger: true }} />
+            <CardMenu className={styles.cardMenu} />;
+          </>
+        );
+      case LOGIN:
+        return (
+          <>
+            <LoginCard />
+          </>
+        );
       default:
         console.log(screen);
         if (hamburger.open) setHamburger({ open: false });
         return (
-          <CardScreen
-            className={styles.homeCard}
-            data={{
-              section: screen,
-            }}
-          />
+          <>
+            <TopCard data={{ hamburger: false }} />
+            <CardScreen
+              className={styles.homeCard}
+              data={{
+                section: screen,
+              }}
+            />
+          </>
         );
     }
   };
-  const hamburgerOpen = () => {
-    var stateH = !hamburger.open;
-    setHamburger({ open: stateH });
-    if (stateH) {
-      return setDisplayName("MENU");
+  const verifyToken = () => {
+    if (!token) {
+      return setDisplayName(LOGIN);
     }
-    if (screen === "MENU") {
-      return setDisplayName("HOME");
-    }
+    return setDisplayName(HOME);
   };
+
+  useEffect(() => {
+    setToken(JSON.parse(localStorage.getItem("x-access-token")));
+    verifyToken();
+  }, []);
 
   return (
     <div className={styles.Card}>
-      <div className={styles.topCard}>
-        <div className={styles.cardTitle}>
-          <div className={styles.circulo}></div>
-          <h1> {cardTitle} </h1>
-        </div>
-        <div
-          className={styles.hamburger}
-          onClick={() => {
-            hamburgerOpen();
-          }}
-        >
-          <div
-            className={hamburger.open ? styles.changeBar1 : styles.bar1}
-          ></div>
-          <div
-            className={hamburger.open ? styles.changeBar2 : styles.bar2}
-          ></div>
-          <div
-            className={hamburger.open ? styles.changeBar3 : styles.bar3}
-          ></div>
-        </div>
-      </div>
+      {switchScreen !== LOGIN ? (
+        <>
+          <TopCard />
+        </>
+      ) : (
+        <></>
+      )}
       {switchScreen()}
     </div>
   );

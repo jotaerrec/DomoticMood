@@ -6,6 +6,15 @@ export const Slider = ({ data }) => {
   const [Value, setValue] = useState(data.value);
   const [intervalId, setIntervalId] = useState(0);
 
+  const rooms = async () => {
+    if (data.rooms) {
+      return (
+        <>
+          <span>{data.rooms}</span>
+        </>
+      )
+    }
+  }
   const inputRef = useRef();
   const handleChange = () => {
     let value = parseInt(inputRef.current.value);
@@ -30,6 +39,7 @@ export const Slider = ({ data }) => {
   };
   return (
     <>
+      {rooms()}
       <li className={styles.sliderContainer}>
         <button
           className={styles.leftArrow}

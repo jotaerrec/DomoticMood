@@ -5,13 +5,23 @@ import socket from "../../Controllers/socketapi";
 export const Switch = ({ data }) => {
   const inputRef = useRef();
   let value = data.value;
+  const rooms = async () => {
+    if (data.rooms) {
+      return (
+        <>
+          <span>{data.rooms}</span>
+        </>
+      )
+    }
+  }
   const activarRelay = () => {
     value = !value;
     inputRef.current.checked = value;
-    socket.emit("SwitchChange",`Switch=[${data.order}, ${value}]`);
+    socket.emit("SwitchChange", `Switch=[${data.order}, ${value}]`);
   };
   return (
     <>
+      {rooms()}
       <li className={styles.checkboxLi}>
         <input
           type="checkbox"
