@@ -5,15 +5,15 @@ import socket from "../../Controllers/socketapi";
 export const Switch = ({ data }) => {
   const inputRef = useRef();
   let value = data.value;
-  const rooms = async () => {
+  const rooms = () => {
     if (data.rooms) {
       return (
         <>
           <span>{data.rooms}</span>
         </>
-      )
+      );
     }
-  }
+  };
   const activarRelay = () => {
     value = !value;
     inputRef.current.checked = value;

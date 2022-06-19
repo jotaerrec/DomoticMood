@@ -9,7 +9,6 @@ const arduinoCodeSchema = new mongoose.Schema({
   },
   use: {
     type: Boolean,
-    required: [true, errorMessage.GENERAL.campo_obligatorio],
     default: false,
   },
   userRegisterID: {

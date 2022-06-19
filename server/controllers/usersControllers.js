@@ -4,22 +4,25 @@ const jwt = require("jsonwebtoken");
 const arduinoCodeModel = require("../models/arduinoCodeModel");
 module.exports = {
   create: async function (req, res, next) {
-    const { name, email, password, arduinoID } = req.body;
+    const { username, email, password, arduinoID } = req.body;
     try {
-      const userExist = await usersModel.findOne({ email })
+      console.log(req.body);
+      const userExist = await usersModel.findOne({ email });
 
       if (userExist)
-        return res.status(200).json({ error: "This user already exist" })
+        return res.status(200).json({ error: "This user already exist" });
 
-      const arduinoExist = await arduinoCodeModel.findOne({ arduinoID })
-      if (arduinoExist)
-        return res.status(200).json({ error: "This arduinoCode already in use" })
+      const arduinoExist = await arduinoCodeModel.findOne({ arduinoID });
+      if (arduinoExist.use)
+        return res
+          .status(200)
+          .json({ error: "This arduinoCode already in use" });
 
       const user = new usersModel({
-        name,
-        email,
-        password,
-        arduinoID
+        name: username,
+        email: email,
+        password: password,
+        arduinoID: arduinoExist,
       });
 
       const document = await user.save();
@@ -29,8 +32,9 @@ module.exports = {
     }
   },
   login: async (req, res, next) => {
+    const { email, password } = req.body;
     try {
-      const user = await usersModel.findOne({ email: req.body.email });
+      const user = await usersModel.findOne({ email: email });
 
       const passwordCorrect =
         user === null ? false : await bcrypt.compare(password, user.password);
@@ -46,14 +50,29 @@ module.exports = {
         req.app.get("secretKey"),
         {}
       );
+      console.log(token);
 
-      return res.status(204).json({
+      return res.json({
         error: false,
         message: "Login ok",
         token: token,
       });
     } catch (e) {
       res.status(401).json({ message: e.message });
+    }
+  },
+  createArduinoId: async (req, res, next) => {
+    const { idArduino } = req.body;
+    try {
+      console.log(req.body);
+      const arduino = new arduinoCodeModel({
+        idArduino: idArduino,
+      });
+
+      const document = await arduino.save();
+      return res.status(200).json(document);
+    } catch (error) {
+      console.log(error);
     }
   },
 };

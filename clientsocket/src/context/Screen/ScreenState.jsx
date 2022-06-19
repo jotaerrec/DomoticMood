@@ -3,7 +3,7 @@ import { ScreenContext } from "./ScreenContext";
 
 export const ScreenController = (props) => {
   const initialState = {
-    displayName: "HOME",
+    displayName: "",
   };
 
   const [screen, setScreen] = useState(initialState);

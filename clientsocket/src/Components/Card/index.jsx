@@ -17,6 +17,7 @@ export const Card = () => {
   const switchScreen = () => {
     switch (screen) {
       case HOME:
+        console.log("holaj");
         return (
           <>
             <TopCard data={{ hamburger: false }} />
@@ -27,7 +28,7 @@ export const Card = () => {
         return (
           <>
             <TopCard data={{ hamburger: true }} />
-            <CardMenu className={styles.cardMenu} />;
+            <CardMenu className={styles.cardMenu} />
           </>
         );
       case LOGIN:
@@ -53,7 +54,7 @@ export const Card = () => {
     }
   };
   const verifyToken = () => {
-    if (!token) {
+    if (!localStorage.getItem("x-access-token")) {
       return setDisplayName(LOGIN);
     }
     return setDisplayName(HOME);
@@ -62,18 +63,9 @@ export const Card = () => {
   useEffect(() => {
     setToken(JSON.parse(localStorage.getItem("x-access-token")));
     verifyToken();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div className={styles.Card}>
-      {switchScreen !== LOGIN ? (
-        <>
-          <TopCard />
-        </>
-      ) : (
-        <></>
-      )}
-      {switchScreen()}
-    </div>
-  );
+  return <div className={styles.Card}>{switchScreen()}</div>;
 };

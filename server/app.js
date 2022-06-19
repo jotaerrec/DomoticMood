@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 require("dotenv").config();
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -18,6 +19,7 @@ app.set("view engine", "ejs");
 app.set("secretKey", process.env.SECRETKEY);
 
 app.use(logger("dev"));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
