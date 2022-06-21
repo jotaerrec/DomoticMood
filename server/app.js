@@ -3,47 +3,38 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const jwt = require("jsonwebtoken");
 const cors = require("cors");
-require("dotenv").config();
+const dns = require("dns");
+const dotenv = require("dotenv");
+const validate = require("./controllers/validationUser");
+
+// Imports Routers
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 
-var app = express();
-require("dns").lookup(require("os").hostname(), function (err, add, fam) {
-  console.log("addr: " + add);
-});
+//Initialization
+const app = express();
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.set("secretKey", process.env.SECRETKEY);
-
 app.use(logger("dev"));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+dns.lookup(require("os").hostname(), function (err, add, fam) {
+  console.log("addr: " + add);
+});
+dotenv.config();
 
+//Initialization Routers
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-function validateUser(req, res, next) {
-  jwt.verify(
-    req.headers["x-access-token"],
-    req.app.get("secretKey"),
-    function (err, decoded) {
-      if (err) {
-        res.json({ message: err.message });
-      } else {
-        console.log(decoded);
-        req.body.userID = decoded;
-        next();
-      }
-    }
-  );
-}
-app.validateUser = validateUser;
+app.validateUser = validate.validateUser;
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,12 +1,13 @@
-$bg-page: #21253d;
-$bg-card: #272c46;
+$bg-page: #21253d; //#4800ff - #21253d
+$bg-card: #272c46; //#5500ff - #272c46
 $bg-menu: #3b4952;
-$bg-gradient-slider : linear-gradient(
-    90deg,
-    rgba(145, 201, 124, 1) 0%,
-    rgba(108, 205, 71, 1) 11%,
-    rgba(67, 210, 13, 1) 23%,
-    rgba(255, 74, 2, 1) 100%
-  );
-$bg-slider:rgb(145, 201, 124);
-$brd-default: #415068;
+$bg-cardAdd: hsl(230, 35%, 21%); //#7858a6
+$bg-gradient-slider: linear-gradient(
+  90deg,
+  rgba(145, 201, 124, 1) 0%,
+  rgba(108, 205, 71, 1) 11%,
+  rgba(67, 210, 13, 1) 23%,
+  rgba(255, 74, 2, 1) 100%
+);
+$bg-slider: rgb(145, 201, 124);
+$brd-default: #415068; // #415068

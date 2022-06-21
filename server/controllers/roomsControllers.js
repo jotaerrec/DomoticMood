@@ -21,7 +21,7 @@ module.exports = {
   delete: async function (req, res) {
     const { userID, roomName } = req.body;
     try {
-      let document = await User.updateOne(
+      const document = await User.updateOne(
         { _id: userID },
         { $pull: { rooms: roomName } }
       );
@@ -33,9 +33,12 @@ module.exports = {
   updateRooms: async function (req, res, next) {
     const { userID, roomName, newRoomName } = req.body;
     try {
-      const document = await Rooms.findOneAndUpdate({ roomName, userID }, { roomName: newRoomName })
+      const document = await Rooms.findOneAndUpdate(
+        { roomName, userID },
+        { roomName: newRoomName }
+      );
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
   getAll: async function (req, res) {
@@ -44,7 +47,7 @@ module.exports = {
       const { rooms } = await User.findById(userID);
       response.json(rooms);
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
 };

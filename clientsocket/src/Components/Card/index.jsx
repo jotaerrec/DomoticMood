@@ -3,21 +3,25 @@ import { CardMenu } from "../CardMenu/index";
 import CardScreen from "../CardScreen";
 import { HomeCard } from "../HomeCard/index";
 import { ScreenContext } from "../../context/Screen/ScreenContext";
-import { HOME, MENU, LOGIN } from "../../context/types";
+import { AddScreen } from "../AddScreen/index.jsx";
+import { HOME, MENU, LOGIN, ADDSCREEN } from "../../context/types";
 import styles from "./styles.module.scss";
 import TopCard from "../TopCard";
 import LoginCard from "../Login";
+import { Switch } from "../Switch";
 
 export const Card = () => {
+  // Variables
   const { screen, setDisplayName } = useContext(ScreenContext);
   const [hamburger, setHamburger] = useState({
     open: false,
   });
   const [token, setToken] = useState(null);
+
+  // Funciones
   const switchScreen = () => {
     switch (screen) {
       case HOME:
-        console.log("holaj");
         return (
           <>
             <TopCard data={{ hamburger: false }} />
@@ -37,6 +41,14 @@ export const Card = () => {
             <LoginCard />
           </>
         );
+      case ADDSCREEN:
+        return (
+          <>
+            <TopCard data={{ hamburger: false }} />
+            <AddScreen />
+          </>
+        );
+
       default:
         console.log(screen);
         if (hamburger.open) setHamburger({ open: false });
@@ -54,7 +66,8 @@ export const Card = () => {
     }
   };
   const verifyToken = () => {
-    if (!localStorage.getItem("x-access-token")) {
+    if (!localStorage.getItem("x-access-token" || !token)) {
+      setToken("");
       return setDisplayName(LOGIN);
     }
     return setDisplayName(HOME);

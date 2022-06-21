@@ -7,6 +7,7 @@ const TopCard = (data) => {
   const [hamburger, setHamburger] = useState({
     open: data.hamburger,
   });
+  const [add, setAdd] = useState(false);
 
   const hamburgerOpen = () => {
     var stateH = !hamburger.open;
@@ -16,6 +17,18 @@ const TopCard = (data) => {
     }
     if (screen === "MENU") {
       return setDisplayName("HOME");
+    }
+  };
+
+  const openScreenAdd = () => {
+    var addScreen = !add;
+    setAdd(addScreen);
+    if (addScreen) {
+      setDisplayName("ADDSCREEN");
+      return setHamburger({ open: false });
+    }
+    if (screen === "ADDSCREEN") {
+      setDisplayName("HOME");
     }
   };
 
@@ -34,6 +47,8 @@ const TopCard = (data) => {
           x="0px"
           y="0px"
           viewBox="0 0 251.882 251.882"
+          className={add ? styles.rotate : ""}
+          onClick={openScreenAdd}
         >
           <g>
             <path d="M215.037,36.846c-49.129-49.128-129.063-49.128-178.191,0c-49.127,49.127-49.127,129.063,0,178.19   c24.564,24.564,56.83,36.846,89.096,36.846s64.531-12.282,89.096-36.846C264.164,165.909,264.164,85.973,215.037,36.846z    M49.574,202.309c-42.109-42.109-42.109-110.626,0-152.735c21.055-21.054,48.711-31.582,76.367-31.582s55.313,10.527,76.367,31.582   c42.109,42.109,42.109,110.626,0,152.735C160.199,244.417,91.683,244.417,49.574,202.309z" />

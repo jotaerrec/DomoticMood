@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+@import "../../variables.scss";
+
+.active {
+  opacity: 0;
+}
+
+.cardMain {
+  display: flex;
+  width: 95%;
+  height: 80%;
+  justify-content: center;
+  margin: 1em auto 1em auto;
+  --animate-duration: 1s;
+
+  input {
+    border: none;
+    font-weight: bold;
+    background-color: inherit;
+    font-size: 13px;
+    color: #2f2f2f;
+  }
+  .cardAdd {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .topCard {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: flex-start;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      ol {
+        font-weight: 500;
+        font-family: "Ubuntu", sans-serif;
+        padding: 0.1em 0.5em 0.1em 0.5em;
+      }
+
+      .olButton {
+        border-radius: 10px 10px 0px 0px;
+        display: flex;
+        justify-content: center;
+        background: $bg-cardAdd;
+        border-width: 1px 1px 0px 1px;
+        border-style: solid;
+        box-shadow: -4px -5px 8px -8px #ff4b7826;
+        border-color: #bca0e4;
+      }
+    }
+    .cardPin {
+      position: relative;
+      z-index: 1;
+      margin-top: -1px;
+      width: 100%;
+      height: 100%;
+      border-radius: 0px 10px 10px 10px;
+      background: $bg-cardAdd;
+      border-width: 1px 1px 1px 1px;
+      border-style: solid;
+      box-shadow: 0px 0px 20px -8px #ff4b7826;
+      border-color: #bca0e4;
+    }
+  }
+}

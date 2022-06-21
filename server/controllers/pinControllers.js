@@ -3,7 +3,7 @@ const usersRouter = require("express").Router();
 const User = require("../models/usersModel");
 const Pin = require("../models/pinConfigModel");
 
-//Verificar si estan bien los objectos 
+//Verificar si estan bien los objectos
 
 module.exports = {
   create: async function (req, res) {
@@ -13,17 +13,16 @@ module.exports = {
       if (!name || !pin || !typeUse || !room)
         return res.status(204).json('Required "content" is field');
 
-      if (!user)
-        return res.status(200).json('User not found')
+      if (!user) return res.status(200).json("User not found");
 
       pinConfigModel;
       const pinConfig = new Pin({
-        'name': name,
-        'pin': pin,
-        'userID': user._id,
-        'type': type,
-        'typeUse': typeUse,
-        'room': room,
+        name: name,
+        pin: pin,
+        userID: user._id,
+        type: type,
+        typeUse: typeUse,
+        room: room,
       });
       const document = await pinConfig.save();
       res.json(document);
@@ -37,23 +36,22 @@ module.exports = {
       if (!pin || !pinNew)
         return res.status(204).json('Required "content" is field');
       const user = await User.findById(userID);
-      const verifyPin = await Pin.findOne({ userID: userID, pin: pin })
-      if (!user)
-        return res.status(200).json('User not found')
+      const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
+      if (!user) return res.status(200).json("User not found");
       if (verifyPin)
-        return res.status(200).json(`The new Pin is already in use `)
-      let document = await Pin.findOneAndUpdate({ pin, userID }, { pin: pinNew })
+        return res.status(200).json(`The new Pin is already in use `);
+      const document = await Pin.findOneAndUpdate(
+        { pin, userID },
+        { pin: pinNew }
+      );
       res.status(200).json(document);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   },
   delete: async function (req, res) {
     const { userID, pin } = req.body;
     try {
-      if (!pin)
-        return res.status(204).json('Required "content" is field');
-      let document = await Pin.findOneDelete({ pin, userID });
+      if (!pin) return res.status(204).json('Required "content" is field');
+      const document = await Pin.findOneDelete({ pin, userID });
       res.status(200).json(document);
     } catch (e) {
       next(e);
@@ -62,8 +60,7 @@ module.exports = {
   getAll: async function (req, res) {
     const { userID } = req.body;
     const pins = await Pin.find({ userID: userID });
-    if (!user || !pins)
-      return res.status(200).json('User not found')
+    if (!user || !pins) return res.status(200).json("User not found");
     response.json(pins);
   },
 };
