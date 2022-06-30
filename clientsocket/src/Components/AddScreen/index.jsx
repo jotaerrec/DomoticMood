@@ -29,6 +29,7 @@ export const AddScreen = () => {
           </ul>
           <div className={styles.cardPin}>
             <form action="">
+              <h2>Agrega el pin y su funcion.</h2>
               <div className={styles.inputContainer}>
                 <div className={styles.left}>
                   <label htmlFor="name">Nombre</label>

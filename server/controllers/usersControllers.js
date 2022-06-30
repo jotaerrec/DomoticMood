@@ -40,7 +40,7 @@ module.exports = {
         user === null ? false : await bcrypt.compare(password, user.password);
 
       if (!(user && passwordCorrect)) {
-        return res.status(401).json({
+        return res.json({
           error: "invalid user or password",
         });
       }
@@ -58,7 +58,8 @@ module.exports = {
         token: token,
       });
     } catch (e) {
-      res.status(401).json({ message: e.message });
+      console.log(e);
+      res.json({ message: e.message });
     }
   },
   createArduinoId: async (req, res, next) => {

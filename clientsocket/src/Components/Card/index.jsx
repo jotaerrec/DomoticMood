@@ -66,7 +66,9 @@ export const Card = () => {
     }
   };
   const verifyToken = () => {
-    if (!localStorage.getItem("x-access-token" || !token)) {
+    console.log(!localStorage.getItem("x-access-token") || !token);
+    console.log(token);
+    if (!localStorage.getItem("x-access-token") || !token) {
       setToken("");
       return setDisplayName(LOGIN);
     }
@@ -74,7 +76,9 @@ export const Card = () => {
   };
 
   useEffect(() => {
-    setToken(JSON.parse(localStorage.getItem("x-access-token")));
+    localStorage.getItem("x-access-token") !== undefined
+      ? setToken(JSON.parse(localStorage.getItem("x-access-token")))
+      : setToken("");
     verifyToken();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

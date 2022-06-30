@@ -7,11 +7,12 @@
 
 .cardMain {
   display: flex;
-  width: 95%;
-  height: 80%;
+  width: 80%;
+  height: 60%;
   justify-content: center;
   margin: 1em auto 1em auto;
   --animate-duration: 1s;
+  font-weight: 700;
 
   input {
     border: none;
@@ -38,31 +39,86 @@
         font-weight: 500;
         font-family: "Ubuntu", sans-serif;
         padding: 0.1em 0.5em 0.1em 0.5em;
+        p {
+          padding: 1px;
+          font-weight: 550;
+        }
       }
 
       .olButton {
-        border-radius: 10px 10px 0px 0px;
+        border-radius: 2rem;
         display: flex;
         justify-content: center;
         background: $bg-cardAdd;
-        border-width: 1px 1px 0px 1px;
-        border-style: solid;
-        box-shadow: -4px -5px 8px -8px #ff4b7826;
-        border-color: #bca0e4;
+        box-shadow: var(--box-shadow-inset);
+        backdrop-filter: var(--filter-blur);
       }
     }
     .cardPin {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       position: relative;
       z-index: 1;
-      margin-top: -1px;
       width: 100%;
       height: 100%;
-      border-radius: 0px 10px 10px 10px;
-      background: $bg-cardAdd;
-      border-width: 1px 1px 1px 1px;
-      border-style: solid;
-      box-shadow: 0px 0px 20px -8px #ff4b7826;
-      border-color: #bca0e4;
+      border-radius: 1rem;
+      background: #0f0c29; /* fallback for old browsers */
+      background: -webkit-linear-gradient(
+        to right,
+        #24243e4b,
+        #302b634b,
+        #0f0c294b
+      ); /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(
+        to right,
+        #24243e4b,
+        #302b634b,
+        #0f0c294b
+      ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+      filter: drop-shadow(0px 0px 7px rgba(1, 1, 1, 0.7));
+      form {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .inputContainer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #ececec;
+          padding: 10px 15px;
+          border-radius: 8px;
+
+          .left {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            width: 80%;
+
+            label {
+              font-weight: 450;
+              letter-spacing: 2px;
+              font-size: 11px;
+            }
+
+            input {
+              border: none;
+              font-weight: bold;
+              background-color: inherit;
+              font-size: 13px;
+              color: #2f2f2f;
+            }
+          }
+
+          svg {
+            width: 25px;
+            height: 20px;
+          }
+        }
+      }
     }
   }
 }

@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const dns = require("dns");
-const dotenv = require("dotenv");
 const validate = require("./controllers/validationUser");
 
 // Imports Routers
@@ -14,6 +13,7 @@ const usersRouter = require("./routes/users");
 
 //Initialization
 const app = express();
+require("dotenv").config();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -28,13 +28,12 @@ app.use(express.static(path.join(__dirname, "public")));
 dns.lookup(require("os").hostname(), function (err, add, fam) {
   console.log("addr: " + add);
 });
-dotenv.config();
 
 //Initialization Routers
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-app.validateUser = validate.validateUser;
+app.verifyUser = validate.validateUser;
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

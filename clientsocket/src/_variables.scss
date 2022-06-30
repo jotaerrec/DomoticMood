@@ -1,7 +1,11 @@
 $bg-page: #21253d; //#4800ff - #21253d
 $bg-card: #272c46; //#5500ff - #272c46
 $bg-menu: #3b4952;
-$bg-cardAdd: hsl(230, 35%, 21%); //#7858a6
+$bg-cardAdd: linear-gradient(
+  115deg,
+  #4286f44f,
+  #373b444f
+); /* Chrome 10-25, Safari 5.1-6 */ //#7858a6
 $bg-gradient-slider: linear-gradient(
   90deg,
   rgba(145, 201, 124, 1) 0%,

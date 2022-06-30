@@ -34,15 +34,13 @@ const LoginCard = () => {
         url: URL_API + "/users/",
         method: "post",
         timeout: 8000,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         data: data,
       });
 
       console.log(res.status < 400);
       console.log(!res.data.error);
-      if (res.status < 400 && !res.data.error) {
+      if (!res.data.error) {
         // test for status you want, etc
         console.log(res.data.token);
         setResponse(res.data);
@@ -50,12 +48,11 @@ const LoginCard = () => {
 
         console.log(res.status);
       }
-
       setLoading(false);
       return setResponse({ error: res.data.error });
       // Don't forget to return something
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
   const register = async (e) => {
@@ -73,6 +70,7 @@ const LoginCard = () => {
         data: data,
       });
       console.log(res);
+      setResponse({ error: res });
       if (res.status < 400 && !res.data.error) {
         // test for status you want, etc
         setResponse(res.data);
