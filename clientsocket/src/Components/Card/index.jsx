@@ -66,19 +66,14 @@ export const Card = () => {
     }
   };
   const verifyToken = () => {
-    console.log(!localStorage.getItem("x-access-token") || !token);
-    console.log(token);
-    if (!localStorage.getItem("x-access-token") || !token) {
-      setToken("");
-      return setDisplayName(LOGIN);
-    }
-    return setDisplayName(HOME);
+    if (
+      localStorage.getItem("x-access-token") &&
+      localStorage.getItem("x-access-token") !== "undefined"
+    )
+      return setDisplayName(HOME);
+    else return setDisplayName(LOGIN);
   };
-
   useEffect(() => {
-    localStorage.getItem("x-access-token") !== undefined
-      ? setToken(JSON.parse(localStorage.getItem("x-access-token")))
-      : setToken("");
     verifyToken();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

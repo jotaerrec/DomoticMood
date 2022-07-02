@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 mongoose.connect(
-  "mongodb://127.0.0.1:27017/domoticmood",
+  "mongodb+srv://jotaerrec:Camilo2015@cluster0.8ygvree.mongodb.net/?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true },
   function (error) {
     if (error) {
@@ -11,3 +11,4 @@ mongoose.connect(
   }
 );
 module.exports = mongoose;
+ 

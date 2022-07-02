@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import styles from "./styles.module.scss";
 import axios from "axios";
-const URL_API = "http://localhost:8080";
+const URL_API = "http://192.168.43.97:8080";
 
 const LoginCard = () => {
   const [token, setToken] = useState();
@@ -52,12 +52,13 @@ const LoginCard = () => {
       return setResponse({ error: res.data.error });
       // Don't forget to return something
     } catch (err) {
+      setResponse({ erorr: "Problema con la api" });
+      setLoading(false);
       console.log(err);
     }
   };
   const register = async (e) => {
     e.preventDefault();
-    console.log("hola");
     try {
       setLoading(true);
       let res = await axios({
@@ -84,6 +85,7 @@ const LoginCard = () => {
       // Don't forget to return something
     } catch (err) {
       setResponse({ erorr: "Problema con la api" });
+      setLoading(false);
       console.error(err);
     }
   };

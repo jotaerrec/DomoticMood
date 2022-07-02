@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     validate: {
       validator: function (v) {
         return validators.isGoodPassword(v);
-      },
+      }, 
     },
   },
   arduinoID: {
