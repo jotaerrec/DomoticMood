@@ -12,13 +12,12 @@ module.exports = {
       if (userExist)
         return res.status(200).json({ error: "This user already exist" });
 
-      const arduinoExist = await arduinoCodeModel.findOne({ arduinoID });
-      
-      if (arduinoExist)
-        return res
-          .status(200)
-          .json({ error: "This arduinoCode not exist" });
-      if (arduinoExist?.use)
+      const arduinoExist = await arduinoCodeModel.findOne({
+        idArduino: arduinoID,
+      });
+      if (!arduinoExist)
+        return res.status(200).json({ error: "This arduinoCode not exist" });
+      if (arduinoExist.use)
         return res
           .status(200)
           .json({ error: "This arduinoCode already in use" });

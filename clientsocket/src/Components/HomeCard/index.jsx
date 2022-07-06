@@ -3,10 +3,9 @@ import styles from "./styles.module.scss";
 import axios from "axios";
 import { Switch } from "../Switch/";
 import { Slider } from "../Slider";
-const URL_API = "http://localhost:3001";
+const URL_API = "http://192.168.0.45:8080";
 
 export const HomeCard = () => {
-  const [token, setToken] = useState();
   const [data, setData] = useState();
   const getElements = async () => {
     try {
@@ -16,16 +15,21 @@ export const HomeCard = () => {
         timeout: 8000,
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token,
+          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
         },
       });
       if (res.status === 200) {
-        // test for status you want, etc
-        console.log(res.status);
+        if (res.data.error === "token invalido") {
+          localStorage.removeItem("x-access-token");
+          window.location.reload();
+        }
+        if (!res.data.length) {
+          return setData("");
+        }
         // Don't forget to return something
         setData(res.data);
       } else {
-        setData([{}]);
+        setData("");
       }
     } catch (err) {
       console.error(err);
@@ -89,8 +93,6 @@ export const HomeCard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const tokenTemp = await JSON.parse(localStorage.getItem("items"));
-      setToken(tokenTemp);
       await getElements();
     };
     fetchData();

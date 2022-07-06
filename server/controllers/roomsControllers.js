@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const usersRouter = require("express").Router();
 const User = require("../models/usersModel");
-const Rooms = require("../models/roomsUsersModel");
 
 module.exports = {
   create: async function (req, res) {
@@ -33,7 +32,7 @@ module.exports = {
   updateRooms: async function (req, res, next) {
     const { userID, roomName, newRoomName } = req.body;
     try {
-      const document = await Rooms.findOneAndUpdate(
+      const document = await User.findOneAndUpdate(
         { roomName, userID },
         { roomName: newRoomName }
       );

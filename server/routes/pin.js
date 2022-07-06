@@ -4,9 +4,33 @@ const router = express.Router();
 const pin = require("../controllers/pinControllers");
 
 /* GET users listing. */
-router.get("/", app.verifyUsers, pin.getAll);
-router.post("/", app.verifyUsers, pin.create);
-router.patch("/", app.verifyUsers, pin.updatePin);
-router.delete("/", app.verifyUsers, pin.delete);
+router.get(
+  "/",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  pin.getAll
+);
+router.post(
+  "/",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  pin.create
+);
+router.patch(
+  "/",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  pin.updatePin
+);
+router.delete(
+  "/",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  pin.delete
+);
 
 module.exports = router;

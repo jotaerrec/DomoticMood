@@ -10,6 +10,8 @@ const validate = require("./controllers/validationUser");
 // Imports Routers
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const pinRouter = require("./routes/pin");
+const roomRouter = require("./routes/rooms");
 
 //Initialization
 const app = express();
@@ -32,6 +34,8 @@ dns.lookup(require("os").hostname(), function (err, add, fam) {
 //Initialization Routers
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/pins", pinRouter);
+app.use("/rooms", roomRouter);
 
 app.verifyUser = validate.validateUser;
 

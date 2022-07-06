@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import styles from "./styles.module.scss";
 import axios from "axios";
-const URL_API = "http://192.168.43.97:8080";
+const URL_API = "http://192.168.0.45:8080";
 
 const LoginCard = () => {
   const [token, setToken] = useState();
@@ -131,7 +131,7 @@ const LoginCard = () => {
                     id="email"
                     type="email"
                     placeholder="Correo..."
-                    autoComplete="off"
+                    autoComplete="on"
                   />
                 </div>
                 <svg
@@ -156,7 +156,7 @@ const LoginCard = () => {
                     id="password"
                     type="password"
                     placeholder="Contraseña..."
-                    autoComplete="off"
+                    autoComplete="on"
                   />
                 </div>
                 <svg
@@ -208,7 +208,7 @@ const LoginCard = () => {
                     id="username"
                     type="text"
                     placeholder="Nombre..."
-                    autoComplete="off"
+                    autoComplete="on"
                   />
                 </div>
                 <svg
@@ -233,7 +233,7 @@ const LoginCard = () => {
                     id="email"
                     type="email"
                     placeholder="Correo..."
-                    autoComplete="off"
+                    autoComplete="on"
                   />
                 </div>
                 <svg
@@ -258,7 +258,7 @@ const LoginCard = () => {
                     id="password"
                     type="password"
                     placeholder="Contraseña..."
-                    autoComplete="off"
+                    autoComplete="on"
                   />
                 </div>
                 <svg
@@ -282,7 +282,7 @@ const LoginCard = () => {
                     id="arduinoID"
                     type="arduinoID"
                     placeholder="Codigo de Arduino..."
-                    autoComplete="off"
+                    autoComplete="on"
                   />
                 </div>
                 <img

@@ -4,9 +4,26 @@ const router = express.Router();
 const rooms = require("../controllers/roomsControllers");
 
 /* GET users listing. */
-router.get("/", app.verifyUsers, rooms.getAll);
-router.post("/", app.verifyUsers, rooms.create);
-router.patch("/", app.verifyUsers, rooms.updaterooms);
-router.delete("/", app.verifyUsers, rooms.delete);
+router.get(
+  "/",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  rooms.getAll
+);
+router.post(
+  "/",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  rooms.create
+);
+router.delete(
+  "/",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  rooms.delete
+);
 
 module.exports = router;

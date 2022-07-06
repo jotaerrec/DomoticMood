@@ -1,4 +1,6 @@
 const mongoose = require("../bin/mongodb");
+const errorMessage = require("../util/errorMessage");
+const validators = require("../util/validators");
 const pinConfigSchema = new mongoose.Schema({
   name: {
     type: String,
