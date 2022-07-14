@@ -8,13 +8,13 @@ module.exports = {
     try {
       const user = await User.findById(userId);
       if (!roomName) {
-        return res.status(204).json('required "content" is field');
+        return res.status(204).json('Requiere que rellene los campos');
       }
       user.rooms = user.rooms.concat(roomName);
       const document = await user.save();
-      res.json(document);
+      res.status(201).json(document);
     } catch (error) {
-      res.status(400).json({ message: e.message });
+      res.status(200).json({ error: "Error al crear la habitación" });
     }
   },
   delete: async function (req, res) {
@@ -24,9 +24,9 @@ module.exports = {
         { _id: userID },
         { $pull: { rooms: roomName } }
       );
-      res.status(200).json(document);
+      res.status(202).json("Se elimino la habitación correctamente");
     } catch (e) {
-      next(e);
+      res.status(200).json("Error al eliminar la habitación")
     }
   },
   updateRooms: async function (req, res, next) {
@@ -36,17 +36,18 @@ module.exports = {
         { roomName, userID },
         { roomName: newRoomName }
       );
+      res.status(202).json("Se actualizo la habitación correctamente")
     } catch (error) {
-      next(error);
+      res.status(200).json("Error al actualizar la habitación")
     }
   },
   getAll: async function (req, res) {
     const { userID } = req.body;
     try {
       const { rooms } = await User.findById(userID);
-      response.json(rooms);
+      res.status(202).json(rooms);
     } catch (error) {
-      next(error);
+      res.status(200).json({error: "Error al obtener las habitaciones"})
     }
   },
 };

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { ScreenContext } from "../../context/Screen/ScreenContext";
 import styles from "./styles.module.scss";
+import { URL_API } from "../../context/types";
 
 const TopCard = (data) => {
   const { screen, setDisplayName } = useContext(ScreenContext);
@@ -8,7 +9,6 @@ const TopCard = (data) => {
     open: data.hamburger,
   });
   const [add, setAdd] = useState(false);
-
   const hamburgerOpen = () => {
     var stateH = !hamburger.open;
     setHamburger({ open: stateH });

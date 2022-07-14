@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import axios from "axios";
-const URL_API = "http://192.168.0.45:8080";
+import { URL_API } from "../../context/types";
 
 export const AddScreen = () => {
-  const [response, setResponse] = useState();
+  const [response, setResponse] = useState({
+    error: "",
+  });
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -35,7 +37,6 @@ export const AddScreen = () => {
         data: data,
       });
       console.log(res);
-      setResponse({ error: res });
       if (res.status < 400 && !res.data.error) {
         // test for status you want, etc
         setResponse(res.data);
@@ -47,9 +48,9 @@ export const AddScreen = () => {
       return setResponse({ error: res.data.error });
       // Don't forget to return something
     } catch (err) {
-      setResponse({ erorr: "Problema con la api" });
+      setResponse({ error: "Problema con la api" });
       setLoading(false);
-      console.error(err);
+      console.log(err);
     }
   };
   return (
@@ -172,8 +173,12 @@ export const AddScreen = () => {
                 </div>
               </div>
               <button className={styles.buttonCreate} type="submit">
-                Crear pin
+                {loading ? "Cargando..." : "Crear Pin"}
               </button>
+
+              {response.error && (
+                <div className={styles.toast}>{response.error}</div>
+              )}
             </form>
           </div>
         </div>

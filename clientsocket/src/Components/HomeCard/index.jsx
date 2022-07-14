@@ -3,9 +3,10 @@ import styles from "./styles.module.scss";
 import axios from "axios";
 import { Switch } from "../Switch/";
 import { Slider } from "../Slider";
-const URL_API = "http://192.168.0.45:8080";
+import { URL_API } from "../../context/types";
 
 export const HomeCard = () => {
+  const [date, setDate] = useState();
   const [data, setData] = useState();
   const getElements = async () => {
     try {
@@ -18,19 +19,9 @@ export const HomeCard = () => {
           "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
         },
       });
-      if (res.status === 200) {
-        if (res.data.error === "token invalido") {
-          localStorage.removeItem("x-access-token");
-          window.location.reload();
-        }
-        if (!res.data.length) {
-          return setData("");
-        }
-        // Don't forget to return something
-        setData(res.data);
-      } else {
-        setData("");
-      }
+      if (res.status === 202)
+        setData(res.data); // Don't forget to return something
+      else setData("");
     } catch (err) {
       console.error(err);
     }
@@ -40,18 +31,21 @@ export const HomeCard = () => {
       return (
         <div className={styles.homeCard}>
           <ol className={styles.switches}>
-            {data.forEach((e, i) => {
-              if (e.type === "output") {
+            {data.map((e, i) => {
+              console.log(e);
+              if (e.type === false) {
                 if (e.typeUse === "relay") {
                   return (
-                    <Switch
-                      data={{
-                        tittle: e.tittle,
-                        value: e.value,
-                        order: e.pin,
-                        rooms: e.rooms,
-                      }}
-                    />
+                    <>
+                      <Switch
+                        data={{
+                          tittle: e.name,
+                          value: e.value,
+                          order: e.pin,
+                          rooms: e.rooms,
+                        }}
+                      />
+                    </>
                   );
                 } else {
                   return (
@@ -66,7 +60,7 @@ export const HomeCard = () => {
                   );
                 }
               }
-              if (e.type === "input") {
+              if (e.type === true) {
                 if (e.typeUse === "sensor") {
                   return (
                     <>
@@ -93,7 +87,14 @@ export const HomeCard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await getElements();
+      if (!date) return await getElements();
+      const actualDate = new Date();
+      const diference = (actualDate - date) / 1000;
+      if (diference > 30) {
+        console.log("va una peti");
+        await getElements;
+        setDate(new Date());
+      }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

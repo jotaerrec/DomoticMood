@@ -47,8 +47,17 @@
         font-size: 25px;
       }
 
-      &:last-child {
-        position: relative;
+    }
+    .spanTittle{
+      display: flex;
+      gap: 3px;
+      p{
+        color: #434257;
+        font-size: 8px;
+      }
+    }
+    .spanOrder{ 
+      position: relative;
         width: 50px;
         height: 26px;
         border-radius: 15px;
@@ -78,7 +87,6 @@
           background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/uncheck-switcher.svg);
           background-size: 12px 12px;
         }
-      }
     }
   }
 }

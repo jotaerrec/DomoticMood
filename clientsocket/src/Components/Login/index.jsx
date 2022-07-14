@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import styles from "./styles.module.scss";
 import axios from "axios";
-const URL_API = "http://192.168.0.45:8080";
+import { URL_API } from "../../context/types";
 
-const LoginCard = () => {
+const LoginCard = ({ args }) => {
   const [token, setToken] = useState();
   const [response, setResponse] = useState({
-    error: "",
+    error: args?.error ? args.error : "",
   });
   const [formMode, setForm] = useState(false);
   const [data, setData] = useState({
@@ -52,7 +52,7 @@ const LoginCard = () => {
       return setResponse({ error: res.data.error });
       // Don't forget to return something
     } catch (err) {
-      setResponse({ erorr: "Problema con la api" });
+      setResponse({ error: "Problema con la api" });
       setLoading(false);
       console.log(err);
     }

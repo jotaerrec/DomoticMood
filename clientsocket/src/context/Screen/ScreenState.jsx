@@ -4,14 +4,18 @@ import { ScreenContext } from "./ScreenContext";
 export const ScreenController = (props) => {
   const initialState = {
     displayName: "",
+    props: "",
   };
 
   const [screen, setScreen] = useState(initialState);
 
-  const setDisplayName = (name) => {
+  const setDisplayName = (name, arg) => {
+    let props;
+    !arg ? (props = "") : (props = arg);
     if (screen.displayName !== name) {
       setScreen({
         displayName: name,
+        props: props,
       });
     }
   };
@@ -20,6 +24,7 @@ export const ScreenController = (props) => {
     <ScreenContext.Provider
       value={{
         screen: screen.displayName,
+        props: props,
         setDisplayName,
       }}
     >

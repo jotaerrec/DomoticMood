@@ -12,6 +12,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const pinRouter = require("./routes/pin");
 const roomRouter = require("./routes/rooms");
+const tokenRouter = require("./routes/validateToken")
 
 //Initialization
 const app = express();
@@ -36,6 +37,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/pins", pinRouter);
 app.use("/rooms", roomRouter);
+app.use("/validateToken", tokenRouter)
 
 app.verifyUser = validate.validateUser;
 

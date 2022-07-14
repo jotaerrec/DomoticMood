@@ -2,25 +2,31 @@ const usersModel = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const arduinoCodeModel = require("../models/arduinoCodeModel");
+
 module.exports = {
   create: async function (req, res, next) {
     const { username, email, password, arduinoID } = req.body;
     try {
-      console.log(req.body);
+
+      if(!username || !!email || !password || !arduinoID)
+        return res.status(204).json({error: "Requiere que rellene los campos"})
+
       const userExist = await usersModel.findOne({ email });
 
       if (userExist)
-        return res.status(200).json({ error: "This user already exist" });
+        return res.status(200).json({ error: "Este usuario ya existe" });
 
       const arduinoExist = await arduinoCodeModel.findOne({
         idArduino: arduinoID,
       });
+
       if (!arduinoExist)
-        return res.status(200).json({ error: "This arduinoCode not exist" });
+        return res.status(200).json({ error: "Este codigo de arduino no existe. Intentelo nuevamente" });
+      
       if (arduinoExist.use)
         return res
           .status(200)
-          .json({ error: "This arduinoCode already in use" });
+          .json({ error: "Este codigo de arduino ya está en uso" });
 
       const user = new usersModel({
         name: username,
@@ -30,22 +36,26 @@ module.exports = {
       });
 
       const document = await user.save();
-      return res.status(200).json(document);
+      return res.status(201).json({message: "Usuario creado correctamente, ahora inicie sesión"});
     } catch (e) {
-      res.json({ error: e.message });
+      res.json({ error: "Error al crear el usuario" });
     }
   },
   login: async (req, res, next) => {
     const { email, password } = req.body;
     try {
+
+      if(!email || !password)
+        return res.status(204).json({error: "Requiere que rellene los campos"})
+
       const user = await usersModel.findOne({ email: email });
 
       const passwordCorrect =
         user === null ? false : await bcrypt.compare(password, user.password);
 
       if (!(user && passwordCorrect)) {
-        return res.json({
-          error: "invalid user or password",
+        return res.status(200).json({
+          error: "Usuario o contraseña incorrecta",
         });
       }
 
@@ -56,14 +66,13 @@ module.exports = {
       );
       console.log(token);
 
-      return res.json({
-        error: false,
-        message: "Login ok",
+      return res.status(202).json({
+        message: "Se inicio sesion correctamente",
         token: token,
       });
     } catch (e) {
       console.log(e);
-      res.json({ message: e.message });
+      res.status(200).json({ message: "Error al iniciar sesión" });
     }
   },
   createArduinoId: async (req, res, next) => {
@@ -75,7 +84,7 @@ module.exports = {
       });
 
       const document = await arduino.save();
-      return res.status(200).json(document);
+      return res.status(201).json(document);
     } catch (error) {
       console.log(error);
     }

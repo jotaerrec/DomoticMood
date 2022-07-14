@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import axios from "axios";
-const URL_API = "http://localhost:3001";
+import { URL_API } from "../../context/types";
 
 export const HomeCard = () => {
-  const [token, setToken] = useState();
   const [response, setResponse] = useState();
   const [data, setData] = useState([
     {
@@ -28,7 +27,7 @@ export const HomeCard = () => {
         timeout: 8000,
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token,
+          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
         },
         body: data,
       });
@@ -42,16 +41,6 @@ export const HomeCard = () => {
       console.error(err);
     }
   };
-
-  useEffect(() => {
-    const funcGetToken = async () => {
-      const tokenTemp = await JSON.parse(
-        localStorage.getItem("x-access-token")
-      );
-      setToken(tokenTemp);
-    };
-    funcGetToken();
-  });
 
   return (
     <>
