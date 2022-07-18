@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "./Components/Card";
+import { Card } from "./Components/hocs/Card";
 import { ScreenController } from "./context/Screen/ScreenState";
 
 import styles from "./styles.module.scss";

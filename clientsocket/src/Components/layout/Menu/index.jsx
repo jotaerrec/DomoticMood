@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { ScreenContext } from "../../context/Screen/ScreenContext";
+import { ScreenContext } from "../../../context/Screen/ScreenContext";
 import styles from "./styles.module.scss";
-import { URL_API } from "../../context/types";
+import { URL_API } from "../../../context/types";
 
 export const CardMenu = () => {
   const { setDisplayName } = useContext(ScreenContext);

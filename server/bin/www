@@ -9,12 +9,19 @@ const debug = require("debug")("pagecontroller:server");
 const http = require("http");
 const socketapi = require("./socketapi");
 
+const dns = require("dns");
+const ip = require("ip");
+
 /**
  * Get port from environment and store in Express.
  */
 
 const port = normalizePort(process.env.PORT || "8080");
 app.set("port", port);
+
+dns.lookup(require("os").hostname(), function (err, add, fam) {
+  console.log(`addr: ${add}\nIP: ${ip.address() + ":" + port} `);
+});
 
 /**
  * Create HTTP server.

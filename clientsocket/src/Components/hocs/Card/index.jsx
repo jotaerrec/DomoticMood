@@ -1,25 +1,24 @@
 import React, { useContext, useState, useEffect } from "react";
-import { CardMenu } from "../CardMenu/index";
-import CardScreen from "../CardScreen";
+import { CardMenu } from "../../layout/Menu/index";
+import CardScreen from "../../layout/Room";
 import axios from "axios";
-import { HomeCard } from "../HomeCard/index";
-import { ScreenContext } from "../../context/Screen/ScreenContext";
-import { AddScreen } from "../AddScreen/index.jsx";
-import { HOME, MENU, LOGIN, ADDSCREEN } from "../../context/types";
+import { HomeCard } from "../../layout/Home/";
+import { ScreenContext } from "../../../context/Screen/ScreenContext";
+import { AddScreen } from "../../layout/Create/index.jsx";
+import { HOME, MENU, LOGIN, ADDSCREEN } from "../../../context/types";
 import styles from "./styles.module.scss";
-import TopCard from "../TopCard";
-import LoginCard from "../Login";
-import { Switch } from "../Switch";
-import { URL_API } from "../../context/types";
+import TopCard from "../../common/Nav";
+import LoginCard from "../../layout/Login";
+import { URL_API } from "../../../context/types";
 
 export const Card = () => {
   // Variables
-  const { screen, props, setDisplayName } = useContext(ScreenContext);
+  const { screen, notifications, setDisplayName } = useContext(ScreenContext);
   const [hamburger, setHamburger] = useState({
     open: false,
   });
   const token = localStorage.getItem("x-access-token");
-
+  console.log(notifications);
   // Funciones
   const switchScreen = () => {
     switch (screen) {
@@ -40,7 +39,7 @@ export const Card = () => {
       case LOGIN:
         return (
           <>
-            <LoginCard args={{ erorr: props }} />
+            <LoginCard args={{ notifications: notifications }} />
           </>
         );
       case ADDSCREEN:
@@ -68,8 +67,7 @@ export const Card = () => {
     }
   };
   const verifyToken = async () => {
-    if (token && token !== "undefined") {
-      console.log("verificando token");
+    if (token && typeof token !== "undefined") {
       try {
         let res = await axios({
           url: URL_API + "/validateToken/",
@@ -85,6 +83,7 @@ export const Card = () => {
 
         console.log(res.status);
         if (res.status !== 202) {
+          localStorage.removeItem("x-access-token");
           return setDisplayName(
             LOGIN,
             "Token invalido, inicia sesion nuevamente. Por favor"
@@ -103,6 +102,7 @@ export const Card = () => {
   };
   useEffect(() => {
     verifyToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   return <div className={styles.Card}>{switchScreen()}</div>;
 };

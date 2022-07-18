@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import axios from "axios";
-import { URL_API } from "../../context/types";
+import { URL_API } from "../../../context/types";
 
 export const AddScreen = () => {
   const [response, setResponse] = useState({

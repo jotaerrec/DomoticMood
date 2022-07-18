@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import styles from "./styles.module.scss";
 import axios from "axios";
-import { URL_API } from "../../context/types";
+import { URL_API } from "../../../context/types";
 
 const LoginCard = ({ args }) => {
   const [token, setToken] = useState();
   const [response, setResponse] = useState({
-    error: args?.error ? args.error : "",
+    error: args?.notifications ? args.notifications : "",
   });
   const [formMode, setForm] = useState(false);
   const [data, setData] = useState({

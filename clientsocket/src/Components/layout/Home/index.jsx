@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import axios from "axios";
-import { Switch } from "../Switch/";
-import { Slider } from "../Slider";
-import { URL_API } from "../../context/types";
+import { Switch } from "../../common/Switch";
+import { Slider } from "../../common/Slider";
+import { URL_API } from "../../../context/types";
 
 export const HomeCard = () => {
-  const [date, setDate] = useState();
-  const [data, setData] = useState();
+  const [data, setData] = useState(JSON.parse(localStorage.getItem("pins")));
   const getElements = async () => {
     try {
       let res = await axios({
@@ -19,11 +18,16 @@ export const HomeCard = () => {
           "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
         },
       });
-      if (res.status === 202)
-        setData(res.data); // Don't forget to return something
-      else setData("");
+      if (res.status === 202) {
+        localStorage.setItem("pins", JSON.stringify(res.data));
+        return setData(res.data); // Don't forget to return something
+      }
+      localStorage.removeItem("pins");
+      setData("");
     } catch (err) {
       console.error(err);
+      setData("");
+      localStorage.removeItem("pins");
     }
   };
   const renderData = () => {
@@ -71,6 +75,7 @@ export const HomeCard = () => {
                 }
               }
             })}
+            {console.log(data)}
           </ol>
         </div>
       );
@@ -87,14 +92,17 @@ export const HomeCard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!date) return await getElements();
+      console.log(data);
+      let date = localStorage.getItem("dateGetPins");
+      console.log(date);
       const actualDate = new Date();
-      const diference = (actualDate - date) / 1000;
-      if (diference > 30) {
-        console.log("va una peti");
-        await getElements;
-        setDate(new Date());
+      if (date && typeof date !== "undefined") {
+        const diference = (actualDate.getTime() - date) / 1000;
+        if (diference < 30) return data;
       }
+      console.log("va una peti", actualDate.getTime() - date);
+      localStorage.setItem("dateGetPins", actualDate.getTime());
+      return await getElements();
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

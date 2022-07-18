@@ -1,4 +1,4 @@
-@import "../../variables.scss";
+@import "../../../variables.scss";
 
 .topCard {
   display: flex;
@@ -33,6 +33,15 @@
     align-items: center;
     gap: 20px;
     margin-right: 20px;
+
+    .logout {
+      transform: rotate(180deg);
+
+      &:hover {
+        fill: rgb(255, 0, 0);
+      }
+    }
+
     svg {
       fill: rgb(255, 255, 255);
       cursor: pointer;

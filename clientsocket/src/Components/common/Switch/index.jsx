@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import styles from "./styles.module.scss";
-import socket from "../../Controllers/socketapi";
-import { URL_API } from "../../context/types";
+import socket from "../../../Controllers/socketapi";
+import { URL_API } from "../../../context/types";
 
 export const Switch = ({ data }) => {
   const inputRef = useRef();
