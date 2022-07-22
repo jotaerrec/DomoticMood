@@ -1,15 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
-import { CardMenu } from "../../layout/Menu/index";
-import CardScreen from "../../layout/Room";
+import { CardMenu } from "Layout/Menu/index";
+import CardScreen from "Layout/Room";
 import axios from "axios";
-import { HomeCard } from "../../layout/Home/";
-import { ScreenContext } from "../../../context/Screen/ScreenContext";
-import { AddScreen } from "../../layout/Create/index.jsx";
-import { HOME, MENU, LOGIN, ADDSCREEN } from "../../../context/types";
+import { HomeCard } from "Layout/Home/";
+import { ScreenContext } from "Context/Screen/ScreenContext";
+import { AddScreen } from "Layout/Create/index.jsx";
+import { HOME, MENU, LOGIN, ADDSCREEN } from "Context/types";
 import styles from "./styles.module.scss";
-import TopCard from "../../common/Nav";
-import LoginCard from "../../layout/Login";
-import { URL_API } from "../../../context/types";
+import TopCard from "Common/Nav";
+import LoginCard from "Layout/Login";
+import { URL_API } from "Context/types";
 
 export const Card = () => {
   // Variables

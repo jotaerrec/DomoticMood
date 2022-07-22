@@ -9,13 +9,17 @@ module.exports = {
   create: async function (req, res) {
     const { name, pin, type, typeUse, room, userID } = req.body;
     try {
-      const user = await User.findById(userID);
       if (!name || !pin || !typeUse || !room)
         return res.status(204).json({ error: 'Required "content" is field' });
 
+      const user = await User.findById(userID);
       if (!user) return res.status(200).json({ error: "User not found" });
       const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
-      if (verifyPin) return res.status(200).json(`Este pin ya esta en uso`);
+      if (verifyPin)
+        return res.status(200).json({ error: `Este pin ya esta en uso` });
+      const verifyRoom = await User.findOne({ userID: userID, room: room });
+      if (!verifyRoom)
+        return res.status(200).json({ error: `Esta habitación no existe` });
 
       const pinConfig = new Pin({
         name: name,
@@ -77,7 +81,10 @@ module.exports = {
       let pins = await Pin.find({ userID: userID });
       if (!pins || pins.length <= 0)
         return res.status(204).json("No tiene pines en uso");
-      res.status(202).json(pins);
+      res.status(202).json({
+        rooms: user.rooms,
+        pins: pins,
+      });
     } catch (error) {
       return res.status(200).json({ error: "Error al obtener los pines" });
     }

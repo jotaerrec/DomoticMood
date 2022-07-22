@@ -4,41 +4,42 @@ const User = require("../models/usersModel");
 
 module.exports = {
   create: async function (req, res) {
-    const { roomName, userId } = req.body;
+    const { name, userId } = req.body;
     try {
       const user = await User.findById(userId);
-      if (!roomName) {
-        return res.status(204).json('Requiere que rellene los campos');
+      if (!name) {
+        return res.status(204).json("Requiere que rellene los campos");
       }
-      user.rooms = user.rooms.concat(roomName);
+      user.rooms = user.rooms.concat(name);
       const document = await user.save();
+      console.log(document);
       res.status(201).json(document);
     } catch (error) {
       res.status(200).json({ error: "Error al crear la habitación" });
     }
   },
   delete: async function (req, res) {
-    const { userID, roomName } = req.body;
+    const { userID, name } = req.body;
     try {
       const document = await User.updateOne(
         { _id: userID },
-        { $pull: { rooms: roomName } }
+        { $pull: { rooms: name } }
       );
       res.status(202).json("Se elimino la habitación correctamente");
     } catch (e) {
-      res.status(200).json("Error al eliminar la habitación")
+      res.status(200).json("Error al eliminar la habitación");
     }
   },
   updateRooms: async function (req, res, next) {
-    const { userID, roomName, newRoomName } = req.body;
+    const { userID, name, newname } = req.body;
     try {
       const document = await User.findOneAndUpdate(
-        { roomName, userID },
-        { roomName: newRoomName }
+        { name, userID },
+        { name: newname }
       );
-      res.status(202).json("Se actualizo la habitación correctamente")
+      res.status(202).json("Se actualizo la habitación correctamente");
     } catch (error) {
-      res.status(200).json("Error al actualizar la habitación")
+      res.status(200).json("Error al actualizar la habitación");
     }
   },
   getAll: async function (req, res) {
@@ -47,7 +48,7 @@ module.exports = {
       const { rooms } = await User.findById(userID);
       res.status(202).json(rooms);
     } catch (error) {
-      res.status(200).json({error: "Error al obtener las habitaciones"})
+      res.status(200).json({ error: "Error al obtener las habitaciones" });
     }
   },
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import styles from "./styles.module.scss";
 import axios from "axios";
-import { URL_API } from "../../../context/types";
+import { URL_API } from "Context/types";
 
 const LoginCard = ({ args }) => {
   const [token, setToken] = useState();

@@ -1,145 +1,37 @@
-import React, { useContext } from "react";
-import { ScreenContext } from "../../../context/Screen/ScreenContext";
+import React, { useContext, useState } from "react";
+import { ScreenContext } from "Context/Screen/ScreenContext";
 import styles from "./styles.module.scss";
-import { URL_API } from "../../../context/types";
+import { URL_API } from "Context/types";
 
 export const CardMenu = () => {
+  const rooms = useState(JSON.parse(localStorage.getItem("rooms")));
   const { setDisplayName } = useContext(ScreenContext);
-
+  const renderRooms = () => {
+    return (
+      <>
+        <ul>
+          {rooms.map((e, i) => {
+            return (
+              <>
+                <li>
+                  <button
+                    onClick={(e) => {
+                      setDisplayName(e.target.innerHTML);
+                    }}
+                  >
+                    {e}
+                  </button>
+                </li>
+              </>
+            );
+          })}
+        </ul>
+      </>
+    );
+  };
   return (
     <div className={styles.cardMenu}>
-      <ul>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Living
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Habitacion 1
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Habitacion 2
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Habitacion 3
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Cocina{" "}
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Habitacion 3
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Cocina{" "}
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Habitacion 3
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Cocina{" "}
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Habitacion 3
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Cocina{" "}
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Habitacion 3
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={(e) => {
-              setDisplayName(e.target.innerHTML);
-            }}
-          >
-            {" "}
-            Cocina{" "}
-          </button>
-        </li>
-      </ul>
+      {rooms === true ? renderRooms : <h1>No tienes habitaciones.</h1>}
     </div>
   );
 };
