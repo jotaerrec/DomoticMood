@@ -18,7 +18,6 @@ export const Card = () => {
     open: false,
   });
   const token = localStorage.getItem("x-access-token");
-  console.log(notifications);
   // Funciones
   const switchScreen = () => {
     switch (screen) {
@@ -51,7 +50,6 @@ export const Card = () => {
         );
 
       default:
-        console.log(screen);
         if (hamburger.open) setHamburger({ open: false });
         return (
           <>
@@ -81,7 +79,6 @@ export const Card = () => {
           },
         });
 
-        console.log(res.status);
         if (res.status !== 202) {
           localStorage.removeItem("x-access-token");
           return setDisplayName(

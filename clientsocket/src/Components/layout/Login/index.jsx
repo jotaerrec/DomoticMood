@@ -37,24 +37,15 @@ const LoginCard = ({ args }) => {
         headers: { "Content-Type": "application/json" },
         data: data,
       });
-
-      console.log(res.status < 400);
-      console.log(!res.data.error);
-      if (!res.data.error) {
-        // test for status you want, etc
-        console.log(res.data.token);
-        setResponse(res.data);
-        tokenResponse(res.data.token);
-
-        console.log(res.status);
+      if (!res.data.error && res.status === 202) {
+        localStorage.setItem("rooms", "[]");
+        return tokenResponse(res.data.token);
       }
       setLoading(false);
-      return setResponse({ error: res.data.error });
-      // Don't forget to return something
+      return setResponse({ error: res.data.error || "Rellene los campos" });
     } catch (err) {
       setResponse({ error: "Problema con la api" });
       setLoading(false);
-      console.log(err);
     }
   };
   const register = async (e) => {
@@ -70,18 +61,12 @@ const LoginCard = ({ args }) => {
         },
         data: data,
       });
-      console.log(res);
-      setResponse({ error: res });
-      if (res.status < 400 && !res.data.error) {
-        // test for status you want, etc
-        setResponse(res.data);
-        tokenResponse(res.data.token);
-
-        console.log(res.status);
+      if (res.status === 201) {
+        return tokenResponse(res.data.token);
       }
 
       setLoading(false);
-      return setResponse({ error: res.data.error });
+      return setResponse({ error: res.data.error || "Rellene los campos" });
       // Don't forget to return something
     } catch (err) {
       setResponse({ erorr: "Problema con la api" });
@@ -185,7 +170,7 @@ const LoginCard = ({ args }) => {
               </p>
             </form>
             {response.error && (
-              <div className={styles.toast}>{response.error}</div>
+              <div className={styles.toastRegister}>{response.error}</div>
             )}
           </div>
           <div
@@ -299,7 +284,7 @@ const LoginCard = ({ args }) => {
               </p>
             </form>
             {response.error && (
-              <div className={styles.toast}>{response.error}</div>
+              <div className={styles.toastRegister}>{response.error}</div>
             )}
           </div>
         </div>

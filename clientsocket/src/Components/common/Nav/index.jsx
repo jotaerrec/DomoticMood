@@ -49,6 +49,9 @@ const TopCard = (data) => {
           className={styles.logout}
           onClick={() => {
             localStorage.removeItem("x-access-token");
+            localStorage.removeItem("pins");
+            localStorage.removeItem("rooms");
+            localStorage.removeItem("dateGetPins");
             window.location.reload();
           }}
         >

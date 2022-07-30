@@ -79,7 +79,7 @@ module.exports = {
       if (!user) return res.status(200).json("Este usuario no existe");
 
       let pins = await Pin.find({ userID: userID });
-      if (!pins || pins.length <= 0)
+      if ((!pins || pins.length <= 0) && user.rooms <= 0)
         return res.status(204).json("No tiene pines en uso");
       res.status(202).json({
         rooms: user.rooms,

@@ -19,14 +19,18 @@ export const HomeCard = () => {
         },
       });
       if (res.status === 202) {
-        localStorage.setItem("pins", JSON.stringify(res.data.pins));
-        localStorage.setItem("rooms", JSON.stringify(res.data.rooms));
-        return setData(res.data.pins); // Don't forget to return something
+        if (res.data.pins.length === 0) {
+          setData("");
+        } else {
+          localStorage.setItem("pins", JSON.stringify(res.data.pins));
+        }
+        return localStorage.setItem("rooms", JSON.stringify(res.data.rooms));
+        // Don't forget to return something
       }
       localStorage.removeItem("pins");
       setData("");
     } catch (err) {
-      console.error(err);
+      console.log(err);
       setData("");
       localStorage.removeItem("pins");
     }
@@ -39,7 +43,6 @@ export const HomeCard = () => {
             {
               // eslint-disable-next-line array-callback-return
               data.map((e, i) => {
-                console.log(e);
                 if (e.type === false) {
                   if (e.typeUse === "relay") {
                     return (

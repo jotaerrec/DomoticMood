@@ -4,17 +4,20 @@ const User = require("../models/usersModel");
 
 module.exports = {
   create: async function (req, res) {
-    const { name, userId } = req.body;
+    const { name, userID } = req.body;
     try {
-      const user = await User.findById(userId);
+      console.log(userID);
+      const user = await User.findById(userID);
       if (!name) {
         return res.status(204).json("Requiere que rellene los campos");
       }
+      console.log(user);
       user.rooms = user.rooms.concat(name);
       const document = await user.save();
       console.log(document);
       res.status(201).json(document);
     } catch (error) {
+      console.log(error);
       res.status(200).json({ error: "Error al crear la habitación" });
     }
   },

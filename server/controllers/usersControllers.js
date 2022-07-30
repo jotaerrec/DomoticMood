@@ -7,9 +7,10 @@ module.exports = {
   create: async function (req, res, next) {
     const { username, email, password, arduinoID } = req.body;
     try {
-
-      if(!username || !!email || !password || !arduinoID)
-        return res.status(204).json({error: "Requiere que rellene los campos"})
+      if (!username || !email || !password || !arduinoID)
+        return res
+          .status(204)
+          .json({ error: "Requiere que rellene los campos" });
 
       const userExist = await usersModel.findOne({ email });
 
@@ -21,8 +22,10 @@ module.exports = {
       });
 
       if (!arduinoExist)
-        return res.status(200).json({ error: "Este codigo de arduino no existe. Intentelo nuevamente" });
-      
+        return res.status(200).json({
+          error: "Este codigo de arduino no existe. Intentelo nuevamente",
+        });
+
       if (arduinoExist.use)
         return res
           .status(200)
@@ -31,12 +34,14 @@ module.exports = {
       const user = new usersModel({
         name: username,
         email: email,
-        password: password,
+        password: bcrypt.hashSync(password, 10),
         arduinoID: arduinoExist,
       });
 
       const document = await user.save();
-      return res.status(201).json({message: "Usuario creado correctamente, ahora inicie sesión"});
+      return res
+        .status(201)
+        .json({ message: "Usuario creado correctamente, ahora inicie sesión" });
     } catch (e) {
       res.json({ error: "Error al crear el usuario" });
     }
@@ -44,16 +49,16 @@ module.exports = {
   login: async (req, res, next) => {
     const { email, password } = req.body;
     try {
-
-      if(!email || !password)
-        return res.status(204).json({error: "Requiere que rellene los campos"})
+      if (!email || !password)
+        return res
+          .status(204)
+          .json({ error: "Requiere que rellene los campos" });
 
       const user = await usersModel.findOne({ email: email });
-
+      console.log(password, user.password);
       const passwordCorrect =
         user === null ? false : await bcrypt.compare(password, user.password);
-
-      if (!(user && passwordCorrect)) {
+      if (!passwordCorrect) {
         return res.status(200).json({
           error: "Usuario o contraseña incorrecta",
         });

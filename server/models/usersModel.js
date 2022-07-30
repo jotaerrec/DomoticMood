@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     validate: {
       validator: function (v) {
         return validators.isGoodPassword(v);
-      }, 
+      },
     },
   },
   arduinoID: {
@@ -28,10 +28,6 @@ const userSchema = new mongoose.Schema({
   rooms: {
     type: [String],
   },
-});
-userSchema.pre("save", function (next) {
-  this.password = bcrypt.hashSync(this.password, 10);
-  next();
 });
 userSchema.statics.findBydIdAndValidate = async function (id) {
   const document = await this.findById(id);

@@ -21,7 +21,6 @@ export const Switch = ({ data }) => {
     console.log(`Switch=[${data.order}, ${value}]`);
     socket.emit("SwitchChange", `Switch=[${data.order}, ${value}]`);
   };
-  console.log(data);
   return (
     <>
       <li className={styles.checkboxLi}>

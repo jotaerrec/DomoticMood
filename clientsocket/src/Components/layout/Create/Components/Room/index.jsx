@@ -29,10 +29,8 @@ const FormRoom = () => {
       if (res.status === 201) {
         setResponse(res.data);
         let newRoom = JSON.parse(localStorage.getItem("rooms"));
-        typeof newRoom === Array
-          ? newRoom.concat(data.name)
-          : (newRoom = [data.name]);
-        localStorage.setItem(JSON.stringify(newRoom));
+        newRoom.concat(data.name);
+        localStorage.setItem("rooms", JSON.stringify(newRoom));
       }
 
       setLoading(false);

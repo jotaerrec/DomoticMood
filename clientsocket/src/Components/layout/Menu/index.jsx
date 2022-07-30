@@ -4,7 +4,8 @@ import styles from "./styles.module.scss";
 import { URL_API } from "Context/types";
 
 export const CardMenu = () => {
-  const rooms = useState(JSON.parse(localStorage.getItem("rooms")));
+  const rooms = JSON.parse(localStorage.getItem("rooms"));
+  console.log(rooms.length);
   const { setDisplayName } = useContext(ScreenContext);
   const renderRooms = () => {
     return (
@@ -31,7 +32,7 @@ export const CardMenu = () => {
   };
   return (
     <div className={styles.cardMenu}>
-      {rooms === true ? renderRooms : <h1>No tienes habitaciones.</h1>}
+      {rooms.length > 0 ? renderRooms() : <h1>No tienes habitaciones.</h1>}
     </div>
   );
 };
