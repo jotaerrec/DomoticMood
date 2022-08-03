@@ -33,7 +33,7 @@ const TopCard = (data) => {
     }
   };
 
-  let cardTitle = "DomoticMood";
+  let cardTitle = "DomoticMood A";
   return (
     <div className={styles.topCard}>
       <div className={styles.cardTitle}>
