@@ -9,13 +9,16 @@ module.exports = {
       console.log(userID);
       const user = await User.findById(userID);
       if (!name) {
-        return res.status(204).json("Requiere que rellene los campos");
+        return res
+          .status(204)
+          .json({ error: "Requiere que rellene los campos" });
       }
       console.log(user);
       user.rooms = user.rooms.concat(name);
       const document = await user.save();
-      console.log(document);
-      res.status(201).json(document);
+      res.status(201).json({
+        rooms: document.rooms,
+      });
     } catch (error) {
       console.log(error);
       res.status(200).json({ error: "Error al crear la habitación" });
@@ -28,9 +31,9 @@ module.exports = {
         { _id: userID },
         { $pull: { rooms: name } }
       );
-      res.status(202).json("Se elimino la habitación correctamente");
+      res.status(202).json({ error: "Se elimino la habitación correctamente" });
     } catch (e) {
-      res.status(200).json("Error al eliminar la habitación");
+      res.status(200).json({ error: "Error al eliminar la habitación" });
     }
   },
   updateRooms: async function (req, res, next) {
@@ -40,9 +43,11 @@ module.exports = {
         { name, userID },
         { name: newname }
       );
-      res.status(202).json("Se actualizo la habitación correctamente");
+      res
+        .status(202)
+        .json({ error: "Se actualizo la habitación correctamente" });
     } catch (error) {
-      res.status(200).json("Error al actualizar la habitación");
+      res.status(200).json({ error: "Error al actualizar la habitación" });
     }
   },
   getAll: async function (req, res) {

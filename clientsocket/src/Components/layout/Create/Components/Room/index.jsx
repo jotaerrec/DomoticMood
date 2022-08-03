@@ -25,12 +25,9 @@ const FormRoom = () => {
         },
         data: data,
       });
-      console.log(res);
       if (res.status === 201) {
         setResponse(res.data);
-        let newRoom = JSON.parse(localStorage.getItem("rooms"));
-        newRoom.concat(data.name);
-        localStorage.setItem("rooms", JSON.stringify(newRoom));
+        localStorage.setItem("rooms", JSON.stringify(res.data.rooms));
       }
 
       setLoading(false);

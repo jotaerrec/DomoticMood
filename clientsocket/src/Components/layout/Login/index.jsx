@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-// eslint-disable-next-line no-unused-vars
 import styles from "./styles.module.scss";
 import axios from "axios";
 import { URL_API } from "Context/types";
 
 const LoginCard = ({ args }) => {
-  const [token, setToken] = useState();
   const [response, setResponse] = useState({
     error: args?.notifications ? args.notifications : "",
   });
@@ -23,9 +21,11 @@ const LoginCard = ({ args }) => {
     localStorage.setItem("x-access-token", JSON.stringify(tokenRes));
     window.location.reload();
   };
+
   const HandleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
   const login = async (e) => {
     e.preventDefault();
     try {
@@ -48,6 +48,7 @@ const LoginCard = ({ args }) => {
       setLoading(false);
     }
   };
+
   const register = async (e) => {
     e.preventDefault();
     try {
@@ -74,10 +75,6 @@ const LoginCard = ({ args }) => {
       console.error(err);
     }
   };
-  useEffect(() => {
-    const tokenTemp = JSON.parse(localStorage.getItem("items"));
-    setToken(tokenTemp);
-  }, []);
 
   return (
     <>

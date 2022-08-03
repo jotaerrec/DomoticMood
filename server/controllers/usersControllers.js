@@ -55,7 +55,6 @@ module.exports = {
           .json({ error: "Requiere que rellene los campos" });
 
       const user = await usersModel.findOne({ email: email });
-      console.log(password, user.password);
       const passwordCorrect =
         user === null ? false : await bcrypt.compare(password, user.password);
       if (!passwordCorrect) {

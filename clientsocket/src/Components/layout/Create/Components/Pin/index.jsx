@@ -4,9 +4,11 @@ import axios from "axios";
 import { URL_API } from "Context/types";
 
 const FormPin = () => {
+  const rooms = JSON.parse(localStorage.getItem("rooms")) || [];
   const [response, setResponse] = useState({
     error: "",
   });
+  console.log(rooms);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -15,6 +17,32 @@ const FormPin = () => {
     typeUse: "",
     room: "",
   });
+
+  const roomsItems = () => {
+    if (rooms.length > 0) {
+      return (
+        <>
+          <option value="" disabled selected hidden>
+            Habitación
+          </option>
+          {rooms.map((room, i) => (
+            <option value={room} key={i}>
+              {room}
+            </option>
+          ))}
+        </>
+      );
+    } else {
+      return (
+        <>
+          <option value="" disabled selected>
+            No tienes habitaciones!
+          </option>
+        </>
+      );
+    }
+  };
+
   const createPin = async (e) => {
     e.preventDefault();
     try {
@@ -49,6 +77,7 @@ const FormPin = () => {
   const HandleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
   return (
     <form action="" onSubmit={createPin}>
       <h2>Agrega el pin y su funcion.</h2>
@@ -116,15 +145,9 @@ const FormPin = () => {
       <div className={styles.inputContainer}>
         <div className={styles.left}>
           <label htmlFor="room">Habitación</label>
-          <input
-            onChange={(e) => HandleChange(e)}
-            value={data.room}
-            name="room"
-            id="room"
-            type="text"
-            placeholder="Habitación..."
-            autoComplete="off"
-          />
+          <select id="room" name="room" onChange={(e) => HandleChange(e)}>
+            {roomsItems()}
+          </select>
         </div>
       </div>
       <div className={styles.inputContainer}>

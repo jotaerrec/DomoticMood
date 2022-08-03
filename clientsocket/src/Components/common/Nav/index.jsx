@@ -9,6 +9,7 @@ const TopCard = (data) => {
     open: data.hamburger,
   });
   const [add, setAdd] = useState(false);
+
   const hamburgerOpen = () => {
     var stateH = !hamburger.open;
     setHamburger({ open: stateH });
@@ -48,10 +49,7 @@ const TopCard = (data) => {
           viewBox="0 0 1024 1024"
           className={styles.logout}
           onClick={() => {
-            localStorage.removeItem("x-access-token");
-            localStorage.removeItem("pins");
-            localStorage.removeItem("rooms");
-            localStorage.removeItem("dateGetPins");
+            localStorage.clear();
             window.location.reload();
           }}
         >
