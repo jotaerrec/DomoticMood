@@ -28,6 +28,7 @@ const FormRoom = () => {
       if (res.status === 201) {
         setResponse(res.data);
         localStorage.setItem("rooms", JSON.stringify(res.data.rooms));
+        setResponse({ error: "" });
       }
 
       setLoading(false);

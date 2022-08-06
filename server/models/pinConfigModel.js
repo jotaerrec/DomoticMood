@@ -9,7 +9,8 @@ const pinConfigSchema = new mongoose.Schema({
   pin: {
     type: String,
     required: [true, errorMessage.GENERAL.campo_obligatorio],
-    unique: [true],
+    index: true,
+    sparse: true,
   },
   userID: {
     type: mongoose.Schema.ObjectId,

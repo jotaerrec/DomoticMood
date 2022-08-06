@@ -60,8 +60,7 @@ const FormPin = () => {
       console.log(res);
       if (res.status < 400 && !res.data.error) {
         // test for status you want, etc
-        setResponse(res.data);
-
+        setResponse({ error: "" });
         console.log(res.status);
       }
 
