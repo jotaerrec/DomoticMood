@@ -17,7 +17,6 @@ const LoginCard = ({ args }) => {
   const [loading, setLoading] = useState(false);
 
   const tokenResponse = (tokenRes) => {
-    console.log(tokenRes);
     localStorage.setItem("x-access-token", JSON.stringify(tokenRes));
     window.location.reload();
   };

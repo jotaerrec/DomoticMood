@@ -7,7 +7,9 @@ import { URL_API } from "Context/types";
 
 export const HomeCard = () => {
   const [data, setData] = useState(JSON.parse(localStorage.getItem("pins")));
+  const [renderData, setRenderData] = useState();
   const getElements = async () => {
+    console.log("ejecutando api");
     try {
       let res = await axios({
         url: URL_API + "/pins/",
@@ -22,6 +24,7 @@ export const HomeCard = () => {
         if (res.data.pins.length === 0) {
           setData("");
         } else {
+          setData(res.data.pins);
           localStorage.setItem("pins", JSON.stringify(res.data.pins));
         }
         return localStorage.setItem("rooms", JSON.stringify(res.data.rooms));
@@ -35,9 +38,25 @@ export const HomeCard = () => {
       localStorage.removeItem("pins");
     }
   };
-  const renderData = () => {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let date = localStorage.getItem("dateGetPins");
+      const actualDate = new Date();
+      if (date && typeof date !== "undefined") {
+        const diference = (actualDate.getTime() - date) / 1000;
+        if (diference < 30) return data;
+      }
+      localStorage.setItem("dateGetPins", actualDate.getTime());
+      return await getElements();
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    console.log(renderData);
     if (data) {
-      return (
+      setRenderData(
         <div className={styles.homeCard}>
           <ol className={styles.switches}>
             {
@@ -86,7 +105,7 @@ export const HomeCard = () => {
         </div>
       );
     } else {
-      return (
+      setRenderData(
         <>
           <div className={styles.notFoundDiv}>
             <h1 className={styles.notFound}>No hay elementos activos</h1>
@@ -94,22 +113,8 @@ export const HomeCard = () => {
         </>
       );
     }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      let date = localStorage.getItem("dateGetPins");
-      const actualDate = new Date();
-      if (date && typeof date !== "undefined") {
-        const diference = (actualDate.getTime() - date) / 1000;
-        if (diference < 30) return data;
-      }
-      localStorage.setItem("dateGetPins", actualDate.getTime());
-      return await getElements();
-    };
-    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data]);
 
-  return <>{renderData()}</>;
+  return <>{renderData}</>;
 };
