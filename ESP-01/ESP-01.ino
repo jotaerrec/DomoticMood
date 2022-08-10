@@ -20,8 +20,8 @@ SocketIOclient socketIO;
 const char* ssid     = "@javi.jpg_";
 const char* pass     = "123456789";
 /// SocketIO Settings ///
-const char* host  = "192.168.43.97"; // Socket.IO Server Address
-int port = 3000; // Socket.IO Port Address
+const char* host  = "192.168.116.157"; // Socket.IO Server Address
+int port = 8080; // Socket.IO Port Address
 const char* path = "/socket.io/?EIO=4"; 
 
 void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
@@ -51,21 +51,18 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
                 return;
             }
             //+++++++++++++++prueba+
-            USE_SERIAL.printf("[")
+            USE_SERIAL.printf("[");
             forn(i, doc.size()){
                 if(i>0) USE_SERIAL.printf(",");
                 USE_SERIAL.printf(doc[i]);
             }
-            USE_SERIAL.printf("]")
+            USE_SERIAL.printf("]");
             String eventName = doc[0];
             USE_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
             String responseData = doc[1];
             USE_SERIAL.printf("Response name %s\n", responseData.c_str());
             // Message Includes a ID for a ACK (callback)
-            if(eventName == "PING")
-            {
-              emitSocket("responsePong", "PONG");
-            }
+            
             if(id) {
                 // creat JSON message for Socket.IO (ack)
                 DynamicJsonDocument docOut(1024);
