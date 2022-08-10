@@ -14,6 +14,7 @@
 ESP8266WiFiMulti WiFiMulti;
 SocketIOclient socketIO;
 
+#define forn(i,n) for(int i=0; i<=int(n);i++)
 #define USE_SERIAL Serial
 /// WIFI Settings ///
 const char* ssid     = "@javi.jpg_";
@@ -49,7 +50,13 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
                 USE_SERIAL.println(error.c_str());
                 return;
             }
-
+            //+++++++++++++++prueba+
+            USE_SERIAL.printf("[")
+            forn(i, doc.size()){
+                if(i>0) USE_SERIAL.printf(",");
+                USE_SERIAL.printf(doc[i]);
+            }
+            USE_SERIAL.printf("]")
             String eventName = doc[0];
             USE_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
             String responseData = doc[1];
