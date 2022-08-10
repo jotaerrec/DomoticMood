@@ -26,12 +26,13 @@ void loop()
 // enviar los datos de la consola serial al ESP-01, 
 // y mostrar lo enviado por el ESP-01 a nuestra consola
 {   
-   if (Serial.available())
+   if (softSerial.available())
    {
-     String data = Serial.readStringUntil('\n');      
+     String data = softSerial.readStringUntil('\n');      
      int index = data.indexOf(",");
-     String subS = split(data, ',');
+     /*String subS = split(data, ',');
      DEBUG(data);
-     DEBUG(subS);
+     DEBUG(subS);*/
+     DEBUG(data)
    }
 }
