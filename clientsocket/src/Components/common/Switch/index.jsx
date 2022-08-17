@@ -6,6 +6,7 @@ import { URL_API } from "../../../context/types";
 export const Switch = ({ data }) => {
   const inputRef = useRef();
   let value = data.value === 0 ? false : true;
+  console.log(data);
   const rooms = () => {
     if (data.rooms) {
       return (
@@ -32,7 +33,11 @@ export const Switch = ({ data }) => {
         />
         <label for="1">
           <span className={styles.spanTittle}>
-            {data.tittle} <p>{data.order}</p>{" "}
+            {data.tittle}{" "}
+            <div>
+              <p>Pin: {data.order}</p>
+              <p>{data.rooms}</p>
+            </div>
           </span>
           <span
             className={styles.spanOrder}
