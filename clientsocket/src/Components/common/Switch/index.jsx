@@ -20,7 +20,7 @@ export const Switch = ({ data }) => {
     value = !value;
     inputRef.current.checked = value;
     console.log(`Switch=[${data.order}, ${value}]`);
-    socket.emit("SwitchChange", `Switch=[${data.order}, ${value}]`);
+    socket.emit("SwitchChange", `Switch=[${data.order},${value}]`);
   };
   return (
     <>

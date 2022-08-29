@@ -17,10 +17,10 @@ SocketIOclient socketIO;
 #define forn(i,n) for(int i=0; i<=int(n);i++)
 #define USE_SERIAL Serial
 /// WIFI Settings ///
-const char* ssid     = "@javi.jpg_";
-const char* pass     = "123456789";
+const char* ssid     = "motorola one hyper_3050";
+const char* pass     = "parafreddy123";
 /// SocketIO Settings ///
-const char* host  = "192.168.116.157"; // Socket.IO Server Address
+const char* host  = "192.168.237.157"; // Socket.IO Server Address
 int port = 8080; // Socket.IO Port Address
 const char* path = "/socket.io/?EIO=4"; 
 
@@ -28,6 +28,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
     switch(type) {
         case sIOtype_DISCONNECT:
             USE_SERIAL.printf("[IOc] Disconnected!\n");
+            socketIO.onEvent(socketIOEvent);
             break;
         case sIOtype_CONNECT:
             USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
@@ -40,28 +41,24 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
             char * sptr = NULL;
             int id = strtol((char *)payload, &sptr, 10);
             USE_SERIAL.printf("[IOc] get event: %s id: %d\n", payload, id);
-            if(id) {
-                payload = (uint8_t *)sptr;
-            }
+            
+            if(strstr((char *)payload, "PONG"))
+              emitSocket("ConfigureAtmega", "$2a$12$8yibsMKrr/CFAKwk1y6TdOiN85crdCc9228cCiaaZ9djucC4fe1he");
+
+            if(id)
+              payload = (uint8_t *)sptr;
+        
             DynamicJsonDocument doc(1024);
             DeserializationError error = deserializeJson(doc, payload, length);
+            
             if(error) {
                 USE_SERIAL.print(F("deserializeJson() failed: "));
                 USE_SERIAL.println(error.c_str());
                 return;
             }
-            //+++++++++++++++prueba+
-            USE_SERIAL.printf("[");
-            forn(i, doc.size()){
-                if(i>0) USE_SERIAL.printf(",");
-                USE_SERIAL.printf(doc[i]);
-            }
-            USE_SERIAL.printf("]");
+            
             String eventName = doc[0];
-            USE_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
-            String responseData = doc[1];
-            USE_SERIAL.printf("Response name %s\n", responseData.c_str());
-            // Message Includes a ID for a ACK (callback)
+            USE_SERIAL.printf("[Command],%s\n", eventName.c_str());
             
             if(id) {
                 // creat JSON message for Socket.IO (ack)
@@ -132,12 +129,12 @@ void setup() {
     String ip = WiFi.localIP().toString();
     USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
     // server address, port and URL
-    socketIO.begin(host, 3000, path);
+    socketIO.begin(host, 8080, path);
 
     // event handler
     socketIO.onEvent(socketIOEvent);
 
-    emitSocket("ConfigureAtmega", "$2a$12$8yibsMKrr/CFAKwk1y6TdOiN85crdCc9228cCiaaZ9djucC4fe1he");
+    
 }
 
 unsigned long messageTimestamp = 0;
