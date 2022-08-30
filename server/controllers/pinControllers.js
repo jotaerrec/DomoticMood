@@ -36,6 +36,26 @@ module.exports = {
       console.log(error);
     }
   },
+  changeName: async function (req, res) {
+    const { userID, pin, name } = req.body;
+    try {
+      if (!pin)
+        return res.status(204).json({ error: 'Required "content" is field' });
+      const user = await User.findById(userID);
+      if (!user) return res.status(204).json({ error: "User not found" });
+      const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
+      if (!verifyPin) return res.status(200).json(`Este pin no existe`);
+      const document = await Pin.findOneAndUpdate(
+        { pin, userID },
+        { name: name }
+      );
+      res.status(202).json({ message: "Se actualizo correctamente" });
+    } catch (error) {
+      res
+        .status(200)
+        .json({ message: "Error al actualizar el pin. Intentelo nuevamente" });
+    }
+  },
   updatePin: async function (req, res) {
     const { userID, pin, pinNew } = req.body;
     try {
@@ -43,11 +63,9 @@ module.exports = {
         return res.status(204).json({ error: 'Required "content" is field' });
 
       const user = await User.findById(userID);
-      const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
       if (!user) return res.status(204).json({ error: "User not found" });
-
+      const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
       if (verifyPin) return res.status(200).json(`Este pin ya esta en uso`);
-
       const document = await Pin.findOneAndUpdate(
         { pin, userID },
         { pin: pinNew }
@@ -73,14 +91,20 @@ module.exports = {
     }
   },
   getAll: async function (req, res) {
+    console.log(req.headers);
     try {
       const { userID } = req.body;
+      const room = req.headers["room"];
       const user = await User.findById(userID);
+      let pins;
+      console.log(room);
       if (!user) return res.status(200).json("Este usuario no existe");
+      if (room) pins = await Pin.find({ userID: userID, room });
+      else pins = await Pin.find({ userID: userID });
 
-      let pins = await Pin.find({ userID: userID });
       if ((!pins || pins.length <= 0) && user.rooms <= 0)
         return res.status(204).json("No tiene pines en uso");
+      console.log(pins);
       res.status(202).json({
         rooms: user.rooms,
         pins: pins,

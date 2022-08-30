@@ -29,7 +29,7 @@ io.on("connection", function (socket) {
     //Pin.findOneAndUpdate({ userID: userID, pin: pin }, {value:value});
     /*let index = arduino.socket.indexOf(process.env.CLAVEHASHEADA);
     let arduinoSocket = arduino.socket;*/
-    socketEmit.emit(value);
+    socketEmit?.emit(value);
   });
 });
 

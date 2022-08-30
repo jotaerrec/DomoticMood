@@ -18,6 +18,13 @@ router.post(
   },
   pin.create
 );
+router.put(
+  "/",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  pin.changeName
+);
 router.patch(
   "/",
   (req, res, next) => {

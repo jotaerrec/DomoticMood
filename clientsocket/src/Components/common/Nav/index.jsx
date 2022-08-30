@@ -96,7 +96,11 @@ const TopCard = (data) => {
           </g>
         </svg>
         <div
-          className={styles.hamburger}
+          className={
+            hamburger.open
+              ? `${styles.hamburger} ${styles.selected}`
+              : styles.hamburger
+          }
           onClick={() => {
             hamburgerOpen();
           }}

@@ -54,12 +54,7 @@ export const Card = () => {
         return (
           <>
             <TopCard data={{ hamburger: false }} />
-            <CardScreen
-              className={styles.homeCard}
-              data={{
-                section: screen,
-              }}
-            />
+            <CardScreen className={styles.homeCard} screen={screen} />
           </>
         );
     }

@@ -37,7 +37,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px;
+    padding: 15px 15px 15px 5px;
+
     span {
       font-weight: 700;
       font-size: 18px;
@@ -49,7 +50,54 @@
     }
     .spanTittle {
       display: flex;
+      align-items: center;
       gap: 3px;
+
+      .inputTittle {
+        background-color: #43425769;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0px 6px 0px 6px;
+        input {
+          background-color: #43425700;
+          width: 50%;
+          border: none;
+          font-size: 20px;
+          font-weight: 700;
+          color: #e8e9ed;
+        }
+        div {
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          gap: 8px;
+          .confirm {
+            transition: 0.5s ease-in;
+            fill: #000000;
+            &:hover {
+              fill: #19c107;
+            }
+          }
+          .reject {
+            transition: 0.5s ease-in;
+            fill: rgb(0, 0, 0);
+            width: 20px;
+            height: 20px;
+            &:hover {
+              fill: #df1515;
+            }
+          }
+        }
+      }
+      svg {
+        fill: #82848a;
+        height: 20px;
+        width: 20px;
+        cursor: pointer;
+      }
       div {
         display: flex;
         flex-direction: column;
@@ -61,6 +109,7 @@
       }
     }
     .spanOrder {
+      cursor: pointer;
       position: relative;
       width: 50px;
       height: 26px;

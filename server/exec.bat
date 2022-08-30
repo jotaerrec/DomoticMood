@@ -1,0 +1,2 @@
+echo "ON"
+npm start
