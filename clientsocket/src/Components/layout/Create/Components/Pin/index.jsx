@@ -118,7 +118,7 @@ const FormPin = () => {
               <option value="" disabled selected hidden>
                 Tipo de uso
               </option>
-              <option value="sensor">Sensor</option>
+              <option value="dht">DHT</option>
               <option value="dimmer">Dimmer</option>
             </select>
           </div>

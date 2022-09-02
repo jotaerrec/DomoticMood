@@ -15,7 +15,12 @@ export const Switch = ({ data }) => {
     value = !value;
     inputRef.current.checked = value;
     console.log(`Switch=[${data.order}, ${value}]`);
-    socket.emit("SwitchChange", `Switch=[${data.order},${value}]`);
+    socket.emit(
+      "SwitchChange",
+      `Switch=[${data.order},${value}]token:${JSON.parse(
+        localStorage.getItem("x-access-token")
+      )}`
+    );
   };
   const updateTittle = async () => {
     try {

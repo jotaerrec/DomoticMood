@@ -1,27 +1,39 @@
-// La velocidad depende del modelo de ESP-01
-// siendo habituales 9600 y 115200
+#include <SoftwareSerial.h>
+#include <DHT.h>
+ 
+#define DHTPIN 6
+#define DHTTYPE DHT11
+#define DEBUG(a) Serial.println(a);
+
+DHT dht(DHTPIN, DHTTYPE);
+SoftwareSerial softSerial(2, 3); // RX, TX
+
 const int baudRate = 9600;
 String readString;   
-#include <SoftwareSerial.h>
-SoftwareSerial softSerial(2, 3); // RX, TX
-#define DEBUG(a) Serial.println(a);
 
 void setup()
 {
    Serial.begin(baudRate);
    softSerial.begin(baudRate);
    pinMode(12,OUTPUT);
+   dht.begin();
 }
 
 void loop()
-// enviar los datos de la consola serial al ESP-01, 
-// y mostrar lo enviado por el ESP-01 a nuestra consola
-{   
-   if (softSerial.available())
-   {
+{     
+    /*float h = dht.readHumidity();
+    float t = dht.readTemperature();
+    if (isnan(h) || isnan(t) ) {
+      Serial.println("Error obteniendo los datos del sensor DHT11");
+      return;
+    }
+   
+    float hic = dht.computeHeatIndex(t, h, false);*/
+    if (softSerial.available())
+     {
      String data = softSerial.readStringUntil('\n');    
      DEBUG(data);
-     
+          
      int index = data.indexOf(',');
      int dataLength = data.length();
      String command = data.substring(0,index);

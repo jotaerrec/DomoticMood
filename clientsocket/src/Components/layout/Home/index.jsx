@@ -9,7 +9,6 @@ export const HomeCard = () => {
   const [data, setData] = useState(JSON.parse(localStorage.getItem("pins")));
   const [renderData, setRenderData] = useState();
   const getElements = async () => {
-    console.log("ejecutando api");
     try {
       let res = await axios({
         url: URL_API + "/pins/",

@@ -1,26 +1,31 @@
 
 #include <Arduino.h>
-
-#include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
-
 #include <ArduinoJson.h>
+#include<ESP8266WiFi.h>
+#include<ESP8266WebServer.h>
+#include<EEPROM.h>
 
-#include <WebSocketsClient.h>
-#include <SocketIOclient.h>
+String pral = "<html>"
+"<meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+"<title>WIFI CONFIG</title><style type='text/css'>body,td,th{ color:#036; } body{background-color:#999;}</style></head>"
+"<body>"
+"<h1> WIFI CONF</hl><br>"
+    "<form action='config' method='get' target='pantalla' id='form'><fieldset align='left' style='border-style:solid;border-color:#336666;width:200px;height:180px;padding:10px;margin:5px;'><legend><strong>Contifurar WI-FI</strong></legend>SSID:<br><input name='ssid' type='text' size='15'><br> <br>PASSWORD:<br><input name='pass' type='password' size='15'>HOST:<br><input name='host' type='text' size='30'><input type='submit' value='setear conexion'></fieldset></form>"
+        "<iframe id='pantalla'name='pantalla'src='' width=900px height-400px frameborder='0'scrolling='no'></iframe>"
+"</body>"
+"</html>";
 
-#include <Hash.h>
-
-ESP8266WiFiMulti WiFiMulti;
-SocketIOclient socketIO;
-
-#define forn(i,n) for(int i=0; i<=int(n);i++)
-#define USE_SERIAL Serial
+ESP8266WebServer server(80);
 /// WIFI Settings ///
-const char* ssid     = "motorola one hyper_3050";
-const char* pass     = "parafreddy123";
-/// SocketIO Settings ///
-const char* host  = "192.168.237.157"; // Socket.IO Server Address
+char ssid[30];
+char pass[30];
+char host[30];
+String ssid_leido;
+String pass_leido;
+String host_leido;
+int ssid_tamano=0;
+int pass_tamano=0;
+int host_tamano=0;
 int port = 8080; // Socket.IO Port Address
 const char* path = "/socket.io/?EIO=4"; 
 
@@ -100,46 +105,163 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
 
 void setup() {
     USE_SERIAL.begin(9600);
-
+    EEPROM.begin(4096);
     //Serial.setDebugOutput(true);
     USE_SERIAL.setDebugOutput(true);
-
     USE_SERIAL.println();
     USE_SERIAL.println();
     USE_SERIAL.println();
-
-      for(uint8_t t = 4; t > 0; t--) {
-          USE_SERIAL.printf("[SETUP] BOOT WAIT %d...\n", t);
-          USE_SERIAL.flush();
-          delay(1000);
-      }
-
-    // disable AP
-    if(WiFi.getMode() & WIFI_AP) {
-        WiFi.softAPdisconnect(true);
+    for(uint8_t t = 4; t > 0; t--) {
+        USE_SERIAL.printf("[SETUP] BOOT WAIT %d...\n", t);
+        USE_SERIAL.flush();
+        delay(1000);
     }
-
-    WiFiMulti.addAP(ssid, pass);
-
+    WiFi.softAP("ESP-0266");
+    server.on("/",[](){
+     server.send(200,"text/html",pral);});
+      server.on("/config",wifi_conf);
+    server.begin();
+    Serial.println("Webserver iniciado ...");
     //WiFi.disconnect();
     while(WiFiMulti.run() != WL_CONNECTED) {
         delay(100);
     }
-
+        
+    intento_conexion();
     String ip = WiFi.localIP().toString();
     USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
     // server address, port and URL
-    socketIO.begin(host, 8080, path);
-
-    // event handler
     socketIO.onEvent(socketIOEvent);
-
-    
 }
 
 unsigned long messageTimestamp = 0;
 void loop() {
     socketIO.loop();
+    server.handleClient();
+}
+
+String arregla_simbolos(String a){
+   a.replace("%C3%A1","á");
+   a.replace("%C3%A9","é");
+   a.replace("%C3%A","í");
+   a.replace("%C3%B3","ó");
+   a.replace("%C3%BA","ú");
+   a.replace("%21","!");
+   a.replace("%23","#");
+   a.replace("%24","$");
+   a.replace("%25","%");
+   a.replace("%26","&");
+   a.replace("%2F","/");
+   a.replace("%28","(");
+   a.replace("%29",")");
+   a.replace("%3D","=");
+   a.replace("%3F","?");
+   a.replace("%27","'");
+   a.replace("%C2ABF","¿");
+   a.replace("%C2%A1",";");
+   a.replace("%C3AB1","ñ");
+   a.replace("%C3491","Ñ");
+   a.replace("+"," ");
+   a.replace("%2B","+");
+   a.replace("%22","\"");
+   return a;
+}
+
+void graba(int addr,String a){
+  int tamano = (a.length()+1);
+  Serial.println(addr);
+  char inchar[tamano];
+  a.toCharArray(inchar,tamano);
+  EEPROM.write(addr,tamano);
+  for(int i=0;i<tamano; i++){
+    addr++;
+    EEPROM.write(addr,inchar[i]);
+  }
+  delay(5000);
+  bool state = EEPROM.commit();
+  Serial.println("Grabado");
+  Serial.println(state);
+}
+    
+String lee(int addr){
+    String nuevostring;
+    int valor;
+    int tamano=EEPROM.read(addr);
+    for(int i=0;i<tamano; i++){
+       addr++;
+       valor=EEPROM.read(addr);
+       nuevostring += (char)(valor);
+       delay(100);
+    }
+    return nuevostring;
+}
+
+void intento_conexion (){
+  if(lee(70).equals("configurado")){
+   ssid_leido=lee(1);// leemos ssid y clave.
+   pass_leido=lee(30);
+   host_leido=lee(110);
+   ssid_tamano=ssid_leido.length()+1;// calculamos la cantidad de caracteres que tiene el ssidyla clave
+   pass_tamano=pass_leido.length()+1;
+   host_tamano=host_leido.length()+1;
+   ssid_leido.toCharArray(ssid,ssid_tamano);// transtornamos el string en un char array ya que es lo que nos pide WiFl.begin();
+   pass_leido.toCharArray(pass,pass_tamano);
+   host_leido.toCharArray(host,host_tamano);
+   int cuenta=0;
+   WiFi.begin(ssid,pass);// intentamos conectar
+   while(WiFi.status()!=WL_CONNECTED){
+    delay(100);
+    cuenta++;
+    Serial.println(cuenta);
+    if(cuenta>20){
+     Serial.println("Fallo en la Conexion");
+     return;
+    }
+   }
+  }
+  if(WiFi.status()== WL_CONNECTED){
+    Serial.print("Exito! Conectados a:");
+    Serial.println(ssid);
+    Serial.println(WiFi.localIP());
+  }
+  socketIO.begin(host, 8080, path);
+}
+void wifi_conf(){
+  int cuenta=0;
+  String getssid = server.arg("ssid");// recibo los valores que envia por ger el formulario web
+  String getpass = server.arg("pass");
+  String gethost = server.arg("host");
+  getssid=arregla_simbolos(getssid);// reemplazo los simbolos que aparecen con UTFS con el simbolo correcto
+  getpass=arregla_simbolos(getpass);
+  gethost=arregla_simbolos(gethost);
+  ssid_tamano=getssid.length()+1;// calculamos la cantidad de caracteres que tiene el ssidyla clave
+  pass_tamano=getpass.length()+1;
+  host_tamano=gethost.length()+1;
+  getssid.toCharArray(ssid,ssid_tamano);// tabsformatos el string en un char array ya que es lo que nos pide 
+  getpass.toCharArray(pass,pass_tamano);
+  gethost.toCharArray(host,host_tamano);
+  Serial.println(getssid);// para depuración
+  Serial.println(getpass);
+  Serial.println(gethost);
+  WiFi.begin(ssid,pass);// intentamos conectar
+  while(WiFi.status() !=  WL_CONNECTED){
+    delay(5000);
+    Serial.print(".");
+    cuenta++;
+      if(cuenta> 20){
+        graba(70,"noconfigurado");
+        Serial.print("no se conecto");
+        return ;
+      }
+  }
+  Serial.println(WiFi.localIP());
+  graba(1,getssid);
+  graba(30,getpass);
+  graba(70,"configurado");
+  graba(110,gethost)
+  Serial.println("Se grabo");
+  socketIO.begin(host, 8080, path);
+  server.send(200,"text/html",String("<h2>Bien !!!! Conexion Exitosa a :"+getssid+"</h2><br> "));
 }
 
 void emitSocket(const String event, const String payload)

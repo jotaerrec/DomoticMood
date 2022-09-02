@@ -76,7 +76,7 @@ module.exports = {
       });
     } catch (e) {
       console.log(e);
-      res.status(200).json({ message: "Error al iniciar sesión" });
+      res.status(200).json({ error: "Error al iniciar sesión" });
     }
   },
   createArduinoId: async (req, res, next) => {
@@ -91,6 +91,7 @@ module.exports = {
       return res.status(201).json(document);
     } catch (error) {
       console.log(error);
+      res.status(200).json({ error: "Error al crear ID" });
     }
   },
 };
