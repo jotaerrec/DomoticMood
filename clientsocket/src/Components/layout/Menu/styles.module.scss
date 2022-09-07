@@ -1,5 +1,5 @@
 .cardMenu {
-  background-color: #cbdae3;
+  background-color: #9c5ec9;
   color: #21253d;
   display: flex;
   height: 100%;
@@ -26,12 +26,12 @@
     li {
       border-width: 1px 0px;
       border-style: outset;
-      border-color: #c5d0e1;
+      border-color: #6b18806b;
       padding-top: 1em;
       padding-bottom: 1em;
       list-style: none;
       &:active {
-        background-color: #f2191926;
+        background-color: rgb(119 64 147 / 50%);
       }
       &:last-child {
         margin-bottom: 4em;

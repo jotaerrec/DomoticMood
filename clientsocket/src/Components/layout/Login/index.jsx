@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import axios from "axios";
 import { URL_API } from "Context/types";
+import socket from "Controllers/socketapi";
 
 const LoginCard = ({ args }) => {
   const [response, setResponse] = useState({
@@ -38,7 +39,9 @@ const LoginCard = ({ args }) => {
       });
       if (!res.data.error && res.status === 202) {
         localStorage.setItem("rooms", "[]");
-        return tokenResponse(res.data.token);
+        tokenResponse(res.data.token);
+        setLoading(false);
+        return socket.emit("ConfigureUser", res.data.token);
       }
       setLoading(false);
       return setResponse({ error: res.data.error || "Rellene los campos" });

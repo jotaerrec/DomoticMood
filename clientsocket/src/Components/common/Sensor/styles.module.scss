@@ -1,0 +1,205 @@
+[type="checkbox"] {
+  position: absolute;
+  left: -9999px;
+}
+.checkboxLi {
+  margin-top: 1em;
+  width: 70%;
+  border-radius: 10px;
+  color: #e8e9ed;
+  background: #18172c37;
+  position: relative;
+  counter-increment: switchCounter;
+  padding: 0px 0em 0px 1.5em;
+
+  &:first-child {
+    margin-top: 0em;
+  }
+
+  @media screen and (min-width: 1000px) {
+    width: 30%;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #434257;
+  }
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: -30px;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff4b77;
+  }
+  label {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px 15px 15px 5px;
+
+    span {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 1px;
+
+      @media screen and (min-width: 500px) {
+        font-size: 25px;
+      }
+    }
+    .center {
+      .speedometr {
+        max-width: 350px;
+        svg {
+          height: 200px;
+          width: 200px;
+          .metka {
+            stroke: #fff;
+            stroke-width: 1;
+          }
+          .arc2 {
+            fill: none;
+            fill-rule: evenodd;
+            stroke-width: 30;
+            stroke-miterlimit: 1;
+            stroke-opacity: 0.05;
+            transform-origin: 180px 180px;
+            transform: scale(0.9 0.9);
+          }
+          .pathArc {
+            fill: none;
+            fill-rule: evenodd;
+            stroke-width: 38;
+            stroke-miterlimit: 4;
+            stroke: #223050;
+            stroke-opacity: 0.5;
+          }
+          .arc {
+            fill: none;
+            fill-rule: evenodd;
+            stroke-width: 40;
+            stroke-miterlimit: 4;
+          }
+          .line {
+            stroke: rgb(255, 0, 0);
+            stroke-width: 2;
+            transform-origin: 63px 0px;
+          }
+          .polygonLine {
+            fill-opacity: 0.9;
+            transform-origin: 59px 6px;
+          }
+          .number {
+            fill: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            opacity: 0.8;
+            font-family: "Open Sans", sans-serif;
+          }
+        }
+        .speedNumber {
+          color: #fff;
+          font-family: "Tulpen One", cursive;
+          font-size: 40px;
+          font-weight: 400;
+          text-align: center;
+        }
+      }
+    }
+    .spanTittle {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+
+      .inputTittle {
+        background-color: #43425769;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 0px 6px 0px 6px;
+        input {
+          background-color: #43425700;
+          width: 50%;
+          border: none;
+          font-size: 20px;
+          font-weight: 700;
+          color: #e8e9ed;
+        }
+        div {
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          gap: 8px;
+          .confirm {
+            transition: 0.5s ease-in;
+            fill: #000000;
+            &:hover {
+              fill: #19c107;
+            }
+          }
+          .reject {
+            transition: 0.5s ease-in;
+            fill: rgb(0, 0, 0);
+            width: 20px;
+            height: 20px;
+            &:hover {
+              fill: #df1515;
+            }
+          }
+        }
+      }
+      svg {
+        fill: #82848a;
+        height: 20px;
+        width: 20px;
+        cursor: pointer;
+      }
+      div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        p {
+          color: #434257;
+          font-size: 8px;
+        }
+      }
+    }
+    .spanOrder {
+      cursor: pointer;
+      position: relative;
+      width: 50px;
+      height: 26px;
+      border-radius: 15px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4);
+      background: #434257;
+      transition: all 0.3s;
+      &::before {
+        content: "";
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        width: 24px;
+        height: 24px;
+        background: #e8e9ed;
+        border-radius: 50%;
+        z-index: 1;
+        transition: transform 0.3s;
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        width: 12px;
+        height: 12px;
+        transform: translateY(-50%);
+        background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/uncheck-switcher.svg);
+        background-size: 12px 12px;
+      }
+    }
+  }
+}

@@ -9,11 +9,34 @@ const socketapi = {
 const arduino = {
   socket: new Map(),
 };
-// Add your socket.io logic here!
+const Users = new Map();
 
 io.on("connection", function (socket) {
+  console.log(socket.connected);
   socket.emit("PONG");
   console.log("A user connected", socket.id);
+  socket.emit("UserConfigure");
+  socket.on("ConfigureUser", async (data) => {
+    data = data?.substr(1, data.length - 2);
+    let user = {};
+    await jwt.verify(data, process.env.SECRETKEY, function (err, decoded) {
+      if (err) {
+        console.log(err);
+      } else {
+        user.ID = decoded.userID;
+      }
+    });
+    let dataTemp = await Users.get(user.ID);
+    if (dataTemp) {
+      if (dataTemp.indexOf(socket) == -1) dataTemp.push(socket);
+      else return console.log(`Usuario ya guardado anteriormente`);
+    } else {
+      dataTemp = [socket];
+      console.log("Guardando Socket");
+    }
+    Users.set(user.ID, dataTemp);
+    console.log(`[ Save User SocketID=[${socket.id}] -- KeyID=${user.ID} ]`);
+  });
   socket.on("ConfigureAtmega", (data) => {
     console.log("[CONFIGURANDO]");
     arduino.socket.set(data.now, socket);
@@ -28,17 +51,52 @@ io.on("connection", function (socket) {
         if (err) {
           console.log(err);
         } else {
-          user.ID = decoded.userID;
+          user.id = decoded.userID;
         }
       });
-      user = await User.findById(user.ID);
+      user = await User.findById(user.id);
       arduinoCode = await Arduino.findById(user.arduinoID);
-      UpdateValue(value[0], arduinoCode.idArduino, user.id);
+      await UpdateValue(value[0], arduinoCode.idArduino, user.id);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  socket.on("SensorValue", async function (data) {
+    try {
+      let valueSplit = data.split("Token:");
+      arduinoCode = await Arduino.findById(valueSplit[1]);
+      let user = await User.findOne({ arduinoID: arduinoCode.id });
+      let { pin, value } = getValue(valueSplit[0], user.ID);
+
+      // Se emiten los valores hacia el cliente
+      let SocketUsers = Users.get(user.id);
+      if (socketUsers.length > 0) {
+        SocketUsers.map(async (e, i) => {
+          if (e.connected) e.emit(`SensorValue=${pin}`, value);
+        });
+      }
     } catch (error) {
       console.log(error);
     }
   });
 });
+
+const getValue = async (value, ID) => {
+  let arrayValue = value.split("=");
+  arrayValue[1] = arrayValue[1].replace("[", "").replace("]", "").split(",");
+  try {
+    let result = await Pin.findOneAndUpdate(
+      { pin: arrayValue[1][0], userID: ID },
+      { value: arrayValue[1][1] }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+  Value = {
+    pin: arrayValue[1][0],
+    value: arrayValue[1][1],
+  };
+};
 
 const UpdateValue = async (value, arduinoID, ID) => {
   try {
@@ -48,6 +106,7 @@ const UpdateValue = async (value, arduinoID, ID) => {
     let arrayValue = value.split("=");
     arrayValue[1] = arrayValue[1].replace("[", "").replace("]", "").split(",");
     arrayValue[1][1] === "true" ? (statePin = 1) : (statePin = 0);
+
     console.log(statePin, arrayValue[1][0]);
     let result = await Pin.findOneAndUpdate(
       { pin: arrayValue[1][0], userID: ID },

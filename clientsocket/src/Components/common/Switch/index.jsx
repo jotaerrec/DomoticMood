@@ -10,7 +10,6 @@ export const Switch = ({ data }) => {
   const [tittle, setTittle] = useState(data.tittle);
   const [response, setResponse] = useState();
   let value = data.value === 0 ? false : true;
-  console.log(data);
   const activarRelay = async () => {
     value = !value;
     inputRef.current.checked = value;

@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import axios from "axios";
 import { Switch } from "Common/Switch";
 import { Slider } from "Common/Slider";
+import { Sensor } from "Common/Sensor";
 import { URL_API } from "Context/types";
 
 export const HomeCard = () => {
@@ -79,7 +80,7 @@ export const HomeCard = () => {
                     return (
                       <Slider
                         data={{
-                          tittle: e.tittle,
+                          tittle: e.name,
                           value: e.value,
                           order: e.pin,
                           rooms: e.room,
@@ -87,14 +88,17 @@ export const HomeCard = () => {
                       />
                     );
                   }
-                }
-                if (e.type === true) {
-                  if (e.typeUse === "sensor") {
+                } else {
+                  if (e.typeUse === "dht") {
                     return (
-                      <>
-                        <span>Name: {e.tittle}</span>
-                        <span>value: {e.value}</span>
-                      </>
+                      <Sensor
+                        data={{
+                          tittle: e.name,
+                          value: e.value,
+                          order: e.pin,
+                          rooms: e.room,
+                        }}
+                      />
                     );
                   }
                 }

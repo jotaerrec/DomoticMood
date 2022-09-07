@@ -62,6 +62,7 @@ const FormPin = () => {
         // test for status you want, etc
         setResponse({ error: "" });
         console.log(res.status);
+        localStorage.removeItem("dateGetPins");
       }
 
       setLoading(false);

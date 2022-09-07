@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { CardMenu } from "Layout/Menu/index";
 import CardScreen from "Layout/Room";
 import axios from "axios";
+import socket from "Controllers/socketapi.js";
 import { HomeCard } from "Layout/Home/";
 import { ScreenContext } from "Context/Screen/ScreenContext";
 import { AddScreen } from "Layout/Create/index.jsx";
@@ -19,6 +20,10 @@ export const Card = () => {
   });
   const token = localStorage.getItem("x-access-token");
   // Funciones
+  socket.on("UserConfigure", async (data) => {
+    socket.emit("ConfigureUser", token);
+  });
+
   const switchScreen = () => {
     switch (screen) {
       case HOME:
