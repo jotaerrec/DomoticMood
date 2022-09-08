@@ -3,7 +3,6 @@ import styles from "./styles.module.scss";
 import axios from "axios";
 import socket from "Controllers/socketapi";
 import { URL_API } from "../../../context/types";
-import { gsap } from "gsap";
 
 export const Sensor = ({ data }) => {
   const inputRef = useRef();
