@@ -187,19 +187,20 @@ export const Sensor = ({ data }) => {
                 d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565"
               />
 
-              {/*<line
+              <line
                 className={styles.line}
                 x1="53"
                 y1="306"
                 x2="180"
                 y2="180"
-          />*/}
-              <polygon
+              />
+              {/*<polygon
                 className={styles.polygonLine}
                 id="bigLine"
                 fill="url(#linear2)"
                 points="180,168 180,192  65,188  65,172"
-              />
+                transform="rotate(180 95 200  )"
+              />*/}
 
               <line
                 className={styles.metka}
@@ -279,6 +280,7 @@ export const Sensor = ({ data }) => {
                 30
               </text>
             </svg>
+            <input type="range" value={data.value} className={styles.range} />
             <div id="speed-number" className={styles.speedNumber}>
               {value}
             </div>

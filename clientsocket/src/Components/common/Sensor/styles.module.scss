@@ -53,8 +53,8 @@
       .speedometr {
         max-width: 350px;
         svg {
-          height: 200px;
-          width: 200px;
+          height: 360px;
+          width: 360px;
           .metka {
             stroke: #fff;
             stroke-width: 1;
@@ -97,6 +97,30 @@
             font-size: 16px;
             opacity: 0.8;
             font-family: "Open Sans", sans-serif;
+          }
+        }
+        .range {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          /*   position: absolute; */
+          /*   left: 35%; */
+          /*   top: 35%; */
+          width: 50%;
+          margin: auto;
+          display: block;
+          &::-webkit-slider-runnable-track {
+            -webkit-appearance: none;
+            border-radius: 10px;
+            width: 50px;
+            background: rgb(0, 168, 255);
+            background-color: linear-gradient(
+              90deg,
+              rgba(0, 168, 255, 1) 0%,
+              rgba(1, 239, 172, 1) 25%,
+              rgba(20, 255, 0, 1) 50%,
+              rgba(255, 235, 0, 1) 75%,
+              rgba(255, 59, 0, 1) 100%
+            );
           }
         }
         .speedNumber {
