@@ -4,6 +4,10 @@
 #include<ESP8266WiFi.h>
 #include<ESP8266WebServer.h>
 #include<EEPROM.h>
+#include <WebSocketsClient.h>
+#include <SocketIOclient.h>
+
+#include <Hash.h>
 
 String pral = "<html>"
 "<meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
@@ -11,10 +15,11 @@ String pral = "<html>"
 "<body>"
 "<h1> WIFI CONF</hl><br>"
     "<form action='config' method='get' target='pantalla' id='form'><fieldset align='left' style='border-style:solid;border-color:#336666;width:200px;height:180px;padding:10px;margin:5px;'><legend><strong>Contifurar WI-FI</strong></legend>SSID:<br><input name='ssid' type='text' size='15'><br> <br>PASSWORD:<br><input name='pass' type='password' size='15'>HOST:<br><input name='host' type='text' size='30'><input type='submit' value='setear conexion'></fieldset></form>"
-        "<iframe id='pantalla'name='pantalla'src='' width=900px height-400px frameborder='0'scrolling='no'></iframe>"
+        // "<iframe id='pantalla'name='pantalla'src='' width=900px height-400px frameborder='0'scrolling='no'></iframe>"
 "</body>"
 "</html>";
 
+SocketIOclient socketIO;
 ESP8266WebServer server(80);
 /// WIFI Settings ///
 char ssid[30];
@@ -28,6 +33,8 @@ int pass_tamano=0;
 int host_tamano=0;
 int port = 8080; // Socket.IO Port Address
 const char* path = "/socket.io/?EIO=4"; 
+
+#define USE_SERIAL Serial
 
 void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
     switch(type) {
@@ -121,17 +128,11 @@ void setup() {
      server.send(200,"text/html",pral);});
       server.on("/config",wifi_conf);
     server.begin();
-    Serial.println("Webserver iniciado ...");
+    USE_SERIAL.println("Webserver iniciado ...");
     //WiFi.disconnect();
-    while(WiFiMulti.run() != WL_CONNECTED) {
-        delay(100);
-    }
         
     intento_conexion();
-    String ip = WiFi.localIP().toString();
-    USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
     // server address, port and URL
-    socketIO.onEvent(socketIOEvent);
 }
 
 unsigned long messageTimestamp = 0;
@@ -176,6 +177,7 @@ void graba(int addr,String a){
   for(int i=0;i<tamano; i++){
     addr++;
     EEPROM.write(addr,inchar[i]);
+    delay(500);
   }
   delay(5000);
   bool state = EEPROM.commit();
@@ -191,7 +193,7 @@ String lee(int addr){
        addr++;
        valor=EEPROM.read(addr);
        nuevostring += (char)(valor);
-       delay(100);
+       delay(500);
     }
     return nuevostring;
 }
@@ -212,19 +214,20 @@ void intento_conexion (){
    while(WiFi.status()!=WL_CONNECTED){
     delay(100);
     cuenta++;
-    Serial.println(cuenta);
+    USE_SERIAL.println(cuenta);
     if(cuenta>20){
-     Serial.println("Fallo en la Conexion");
+     USE_SERIAL.println("Fallo en la Conexion");
      return;
     }
    }
   }
   if(WiFi.status()== WL_CONNECTED){
-    Serial.print("Exito! Conectados a:");
-    Serial.println(ssid);
-    Serial.println(WiFi.localIP());
+    USE_SERIAL.print("Exito! Conectados a:");
+    USE_SERIAL.println(ssid);
+    USE_SERIAL.println( WiFi.localIP());
   }
   socketIO.begin(host, 8080, path);
+  socketIO.onEvent(socketIOEvent);
 }
 void wifi_conf(){
   int cuenta=0;
@@ -258,9 +261,10 @@ void wifi_conf(){
   graba(1,getssid);
   graba(30,getpass);
   graba(70,"configurado");
-  graba(110,gethost)
+  graba(110,gethost);
   Serial.println("Se grabo");
   socketIO.begin(host, 8080, path);
+  socketIO.onEvent(socketIOEvent);
   server.send(200,"text/html",String("<h2>Bien !!!! Conexion Exitosa a :"+getssid+"</h2><br> "));
 }
 

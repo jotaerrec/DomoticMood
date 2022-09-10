@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import axios from "axios";
 import socket from "Controllers/socketapi";
 import { URL_API } from "../../../context/types";
+import Speedometer, { Indicator, Progress, Arc } from "react-speedometer";
 
 export const Sensor = ({ data }) => {
   const inputRef = useRef();
@@ -16,7 +17,6 @@ export const Sensor = ({ data }) => {
       setValue(data);
     });
   }, []);
-
   const updateTittle = async () => {
     try {
       let res = await axios({
@@ -131,158 +131,32 @@ export const Sensor = ({ data }) => {
         </span>
         <div className={styles.center}>
           <div className={styles.speedometr}>
-            <svg className={styles.speed} viewBox="0 0 400 342">
-              <defs>
-                <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#00a8ff"></stop>
-                  <stop offset="25%" stop-color="#01efac"></stop>
-                  <stop offset="50%" stop-color="#14ff00"></stop>
-                  <stop offset="75%" stop-color="#ffeb00"></stop>
-                  <stop offset="100%" stop-color="#ff7300"></stop>
-                </linearGradient>
-              </defs>
-              <defs>
-                <linearGradient id="linear2" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="50%" stop-color="#fff" />
-
-                  <stop offset="90%" stop-color="rgba(255,255,255,0)" />
-                </linearGradient>
-              </defs>
-              <defs>
-                <filter id="f4" x="0" y="0" width="200%" height="200%">
-                  <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />
-
-                  <feGaussianBlur
-                    result="blurOut"
-                    in="matrixOut"
-                    stdDeviation="25"
-                  />
-                  <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-                </filter>
-              </defs>
-              <defs>
-                <filter id="f1" x="0" y="0">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="7" />
-                </filter>
-              </defs>
-
-              <path
-                className={styles.arc2}
-                id="arc2"
-                transform="scale(0.9 0.9) translate(20 18)"
-                stroke="url(#linear)"
-                filter="url(#f1)"
-                d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565"
-              />
-              <path
-                className={styles.pathArc}
-                id="path"
-                d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565"
-              />
-              <path
-                className={styles.arc}
-                stroke="url(#linear)"
-                id="arc"
-                d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565"
-              />
-
-              <line
-                className={styles.line}
-                x1="53"
-                y1="306"
-                x2="180"
-                y2="180"
-              />
-              {/*<polygon
-                className={styles.polygonLine}
-                id="bigLine"
-                fill="url(#linear2)"
-                points="180,168 180,192  65,188  65,172"
-                transform="rotate(180 95 200  )"
-              />*/}
-
-              <line
-                className={styles.metka}
-                x1="180"
-                y1="14"
-                x2="180"
-                y2="26"
-                transform="rotate(226 180 180)"
-              ></line>
-              <line
-                className={styles.metka}
-                x1="180"
-                y1="14"
-                x2="180"
-                y2="26"
-                transform="rotate(270 180 180)"
-              ></line>
-              <line
-                className={styles.metka}
-                x1="180"
-                y1="14"
-                x2="180"
-                y2="26"
-                transform="rotate(315 180 180)"
-              ></line>
-              <line
-                className={styles.metka}
-                x1="180"
-                y1="14"
-                x2="180"
-                y2="26"
-                transform="rotate(405 180 180)"
-              ></line>
-              <line
-                className={styles.metka}
-                x1="180"
-                y1="14"
-                x2="180"
-                y2="26"
-                transform="rotate(450 180 180)"
-              ></line>
-              <line
-                className={styles.metka}
-                x1="180"
-                y1="14"
-                x2="180"
-                y2="26"
-                transform="rotate(494 180 180)"
-              ></line>
-              <line
-                className={styles.metka}
-                x1="180"
-                y1="14"
-                x2="180"
-                y2="26"
-              ></line>
-
-              <text x="85" y="275" className={styles.number}>
-                0
-              </text>
-              <text x="50" y="187" className={styles.number}>
-                5
-              </text>
-              <text x="82" y="100" className={styles.number}>
-                10
-              </text>
-              <text x="170" y="60" className={styles.number}>
-                15
-              </text>
-              <text x="255" y="100" className={styles.number}>
-                20
-              </text>
-              <text x="292" y="187" className={styles.number}>
-                25
-              </text>
-              <text x="255" y="275" className={styles.number}>
-                30
-              </text>
-            </svg>
-            <input type="range" value={data.value} className={styles.range} />
-            <div id="speed-number" className={styles.speedNumber}>
-              {value}
-            </div>
+            <Speedometer
+              value={value}
+              min={0}
+              max={40}
+              angle={180}
+              lineCap="round"
+              accentColor="orange"
+            >
+              <Arc arcWidth={20} />
+              <Progress arcWidth={20} />
+              <Indicator>
+                {(value, textProps) => (
+                  <text
+                    transform="rotate(450, 125, 125)"
+                    x="125"
+                    y="120"
+                    text-anchor="middle"
+                    font-size="45"
+                    font-family="helvetica"
+                    fill="white"
+                  >
+                    {value} °C
+                  </text>
+                )}
+              </Indicator>
+            </Speedometer>
           </div>
         </div>
       </label>

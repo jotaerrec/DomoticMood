@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
 #include <DHT.h>
- 
+
 #define DHTPIN 6
 #define DHTTYPE DHT11
 #define DEBUG(a) Serial.println(a);
