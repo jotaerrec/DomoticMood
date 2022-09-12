@@ -101,7 +101,7 @@ const getValue = async (value, ID) => {
 const UpdateValue = async (value, arduinoID, ID) => {
   try {
     let statePin;
-    console.log(ID);
+    console.log(value);
     console.log(arduinoID);
     let arrayValue = value.split("=");
     arrayValue[1] = arrayValue[1].replace("[", "").replace("]", "").split(",");
