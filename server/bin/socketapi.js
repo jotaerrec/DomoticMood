@@ -12,7 +12,6 @@ const arduino = {
 const Users = new Map();
 
 io.on("connection", function (socket) {
-  console.log(socket.connected);
   socket.emit("PONG");
   console.log("A user connected", socket.id);
   socket.emit("UserConfigure");

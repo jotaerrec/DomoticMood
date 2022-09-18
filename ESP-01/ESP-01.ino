@@ -1,7 +1,8 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include<ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
 #include<ESP8266WebServer.h>
 #include<EEPROM.h>
 #include <WebSocketsClient.h>
@@ -19,8 +20,10 @@ String pral = "<html>"
 "</body>"
 "</html>";
 
+ESP8266WiFiMulti wifiMulti;
 SocketIOclient socketIO;
 ESP8266WebServer server(80);
+
 /// WIFI Settings ///
 char ssid[30];
 char pass[30];
@@ -40,7 +43,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
     switch(type) {
         case sIOtype_DISCONNECT:
             USE_SERIAL.printf("[IOc] Disconnected!\n");
-            socketIO.onEvent(socketIOEvent);
+            socketIO.begin(host, 8080, path);
             break;
         case sIOtype_CONNECT:
             USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
@@ -123,15 +126,19 @@ void setup() {
         USE_SERIAL.flush();
         delay(1000);
     }
+    WiFi.mode(WIFI_AP_STA);
     WiFi.softAP("ESP-0266");
+    USE_SERIAL.println("...");
     server.on("/",[](){
-     server.send(200,"text/html",pral);});
-      server.on("/config",wifi_conf);
+     server.send(200,"text/html",pral);
+    });
+    server.on("/config",wifi_conf);
     server.begin();
-    USE_SERIAL.println("Webserver iniciado ...");
-    //WiFi.disconnect();
-        
+    USE_SERIAL.println("...");
+    USE_SERIAL.println("[WEBSERVER] Iniciado ...");
+    
     intento_conexion();
+    socketIO.onEvent(socketIOEvent);
     // server address, port and URL
 }
 
@@ -179,10 +186,8 @@ void graba(int addr,String a){
     EEPROM.write(addr,inchar[i]);
     delay(500);
   }
-  delay(5000);
-  bool state = EEPROM.commit();
+  EEPROM.commit();
   Serial.println("Grabado");
-  Serial.println(state);
 }
     
 String lee(int addr){
@@ -210,9 +215,9 @@ void intento_conexion (){
    pass_leido.toCharArray(pass,pass_tamano);
    host_leido.toCharArray(host,host_tamano);
    int cuenta=0;
-   WiFi.begin(ssid,pass);// intentamos conectar
-   while(WiFi.status()!=WL_CONNECTED){
-    delay(100);
+   WiFi.begin(ssid,pass); // intentamos conectar
+   while(WiFi.status()!= WL_CONNECTED){
+    delay(1000);
     cuenta++;
     USE_SERIAL.println(cuenta);
     if(cuenta>20){
@@ -220,14 +225,12 @@ void intento_conexion (){
      return;
     }
    }
-  }
   if(WiFi.status()== WL_CONNECTED){
     USE_SERIAL.print("Exito! Conectados a:");
     USE_SERIAL.println(ssid);
-    USE_SERIAL.println( WiFi.localIP());
+    socketIO.begin(host, 8080, path);
   }
-  socketIO.begin(host, 8080, path);
-  socketIO.onEvent(socketIOEvent);
+  }
 }
 void wifi_conf(){
   int cuenta=0;
@@ -248,7 +251,7 @@ void wifi_conf(){
   Serial.println(gethost);
   WiFi.begin(ssid,pass);// intentamos conectar
   while(WiFi.status() !=  WL_CONNECTED){
-    delay(5000);
+    delay(1000);
     Serial.print(".");
     cuenta++;
       if(cuenta> 20){
@@ -257,10 +260,9 @@ void wifi_conf(){
         return ;
       }
   }
-  Serial.println(WiFi.localIP());
-  graba(1,getssid);
-  graba(30,getpass);
-  graba(70,"configurado");
+  graba(1  ,getssid);
+  graba(30 ,getpass);
+  graba(70 ,"configurado");
   graba(110,gethost);
   Serial.println("Se grabo");
   socketIO.begin(host, 8080, path);
