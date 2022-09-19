@@ -105,7 +105,6 @@ module.exports = {
 
       if ((!pins || pins.length <= 0) && user.rooms <= 0)
         return res.status(204).json({ error: "No tiene pines en uso" });
-      console.log(pins);
       res.status(202).json({
         rooms: user.rooms,
         pins: pins,

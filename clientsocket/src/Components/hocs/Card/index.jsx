@@ -77,7 +77,7 @@ export const Card = () => {
         let res = await axios({
           url: URL_API + "/validateToken/",
           method: "get",
-          timeout: 8000,
+          timeout: 4000,
           headers: {
             "Content-Type": "application/json",
             "x-access-token": JSON.parse(

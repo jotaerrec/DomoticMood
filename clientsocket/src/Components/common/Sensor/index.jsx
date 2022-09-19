@@ -11,7 +11,7 @@ export const Sensor = ({ data }) => {
   const [value, setValue] = useState(data.value);
   const [tittle, setTittle] = useState(data.tittle);
   const [response, setResponse] = useState();
-  console.log(data.tittle);
+  console.log(window.innerWidth);
   useEffect(() => {
     socket.on(`SensorValue=${data.order}`, async (data) => {
       setValue(data);
@@ -136,6 +136,9 @@ export const Sensor = ({ data }) => {
               min={0}
               max={40}
               angle={180}
+              width={window.innerWidth > 350 ? 250 : 160}
+              height={150}
+              className={styles.speedometer}
               lineCap="round"
               accentColor="orange"
             >
@@ -145,10 +148,10 @@ export const Sensor = ({ data }) => {
                 {(value, textProps) => (
                   <text
                     transform="rotate(450, 125, 125)"
-                    x="125"
-                    y="120"
+                    x={window.innerWidth > 350 ? "125" : "80"}
+                    y={window.innerWidth > 350 ? "120" : "170"}
                     text-anchor="middle"
-                    font-size="45"
+                    font-size={window.innerWidth > 350 ? "45" : "25"}
                     font-family="helvetica"
                     fill="white"
                   >
