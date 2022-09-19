@@ -1,15 +1,16 @@
 import React, { useContext, useState, useEffect } from "react";
-import { CardMenu } from "Layout/Menu/index";
-import CardScreen from "Layout/Room";
 import axios from "axios";
-import socket from "Controllers/socketapi.js";
+import { CardMenu } from "Layout/Menu/";
 import { HomeCard } from "Layout/Home/";
+import { AddScreen } from "Layout/Create/";
+import { CardScreen } from "Layout/Room";
+import { LoginCard } from "Layout/Login";
+import { Profile } from "Layout/Profile/";
+import socket from "Controllers/socketapi.js";
 import { ScreenContext } from "Context/Screen/ScreenContext";
-import { AddScreen } from "Layout/Create/index.jsx";
-import { HOME, MENU, LOGIN, ADDSCREEN } from "Context/types";
+import { HOME, MENU, LOGIN, ADDSCREEN, PROFILE } from "Context/types";
 import styles from "./styles.module.scss";
 import TopCard from "Common/Nav";
-import LoginCard from "Layout/Login";
 import { URL_API } from "Context/types";
 
 export const Card = () => {
@@ -53,7 +54,13 @@ export const Card = () => {
             <AddScreen />
           </>
         );
-
+      case PROFILE:
+        return (
+          <>
+            <TopCard data={{ hamburger: false }} />
+            <Profile />
+          </>
+        );
       default:
         if (hamburger.open) setHamburger({ open: false });
         return (

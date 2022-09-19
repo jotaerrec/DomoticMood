@@ -5,7 +5,7 @@ import { Switch } from "Common/Switch";
 import { Slider } from "Common/Slider";
 import { URL_API } from "Context/types";
 
-const CardScreen = ({ screen }) => {
+export const CardScreen = ({ screen }) => {
   console.log(screen);
   const [data, setData] = useState(
     JSON.parse(localStorage.getItem(`pins:${screen}`))
@@ -123,5 +123,3 @@ const CardScreen = ({ screen }) => {
 
   return <>{renderData}</>;
 };
-
-export default CardScreen;

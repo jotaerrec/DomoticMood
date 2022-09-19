@@ -4,7 +4,7 @@ import axios from "axios";
 import { URL_API } from "Context/types";
 import socket from "Controllers/socketapi";
 
-const LoginCard = ({ args }) => {
+export const LoginCard = ({ args }) => {
   const [response, setResponse] = useState({
     error: args?.notifications ? args.notifications : "",
   });
@@ -293,5 +293,3 @@ const LoginCard = ({ args }) => {
     </>
   );
 };
-
-export default LoginCard;
