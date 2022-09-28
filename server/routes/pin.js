@@ -18,6 +18,13 @@ router.post(
   },
   pin.create
 );
+router.post(
+  "/important",
+  (req, res, next) => {
+    req.app.verifyUser(req, res, next);
+  },
+  pin.changeImportant
+);
 router.put(
   "/",
   (req, res, next) => {

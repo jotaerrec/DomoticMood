@@ -40,6 +40,11 @@ const pinConfigSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  important: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 module.exports = mongoose.model("pinConfig", pinConfigSchema);
 

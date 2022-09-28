@@ -34,12 +34,10 @@ export const CardScreen = ({ screen }) => {
           localStorage.setItem(`pins:${screen}`, JSON.stringify(res.data.pins));
           return;
         }
-        // Don't forget to return something
       }
       localStorage.removeItem(`pins:${screen}`);
       setData("");
     } catch (err) {
-      console.log(err);
       setData("");
       localStorage.removeItem(`pins:${screen}`);
     }
@@ -77,6 +75,8 @@ export const CardScreen = ({ screen }) => {
                             value: e.value,
                             order: e.pin,
                             rooms: e.room,
+                            important: e.important,
+                            edit: true,
                           }}
                         />
                       </>
@@ -88,6 +88,7 @@ export const CardScreen = ({ screen }) => {
                           tittle: e.tittle,
                           value: e.value,
                           order: e.pin,
+                          important: e.important,
                           rooms: e.room,
                         }}
                       />

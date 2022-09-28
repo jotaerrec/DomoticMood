@@ -72,6 +72,8 @@ export const HomeCard = () => {
                             value: e.value,
                             order: e.pin,
                             rooms: e.room,
+                            important: e.important,
+                            edit: false,
                           }}
                         />
                       </>
@@ -84,6 +86,7 @@ export const HomeCard = () => {
                           value: e.value,
                           order: e.pin,
                           rooms: e.room,
+                          important: e.important,
                         }}
                       />
                     );
@@ -97,6 +100,7 @@ export const HomeCard = () => {
                           value: e.value,
                           order: e.pin,
                           rooms: e.room,
+                          important: e.important,
                         }}
                       />
                     );

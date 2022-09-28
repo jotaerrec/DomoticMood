@@ -53,6 +53,19 @@
       align-items: center;
       gap: 3px;
 
+      .star {
+        &:hover {
+          fill: #ffc400;
+        }
+      }
+      .starActive {
+        fill: #ffc400;
+      }
+      .edit {
+        &:hover {
+          fill: #71232377;
+        }
+      }
       .inputTittle {
         background-color: #43425769;
         border-radius: 10px;
@@ -61,6 +74,7 @@
         align-items: center;
         justify-content: space-between;
         padding: 0px 6px 0px 6px;
+
         input {
           background-color: #43425700;
           width: 50%;
