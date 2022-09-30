@@ -8,15 +8,16 @@
 DHT dht(DHTPIN, DHTTYPE);
 SoftwareSerial softSerial(2, 3); // RX, TX
 
-const int baudRate = 9600;
+const int baudRate = 115200;
 String readString;
 
 void setup()
 {
-  Serial.begin(baudRate);
-  softSerial.begin(baudRate);
+  Serial.begin(9600);
+  softSerial.begin(9600);
   pinMode(12, OUTPUT);
   dht.begin();
+  Serial.println("Init Serial");
 }
 
 void loop()

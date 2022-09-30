@@ -117,7 +117,6 @@ void setup() {
     USE_SERIAL.begin(9600);
     EEPROM.begin(4096);
     //Serial.setDebugOutput(true);
-    USE_SERIAL.setDebugOutput(true);
     USE_SERIAL.println();
     USE_SERIAL.println();
     USE_SERIAL.println();

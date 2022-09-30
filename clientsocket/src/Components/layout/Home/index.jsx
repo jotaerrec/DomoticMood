@@ -69,6 +69,7 @@ export const HomeCard = () => {
                         <Switch
                           data={{
                             tittle: e.name,
+                            id: e.id,
                             value: e.value,
                             order: e.pin,
                             rooms: e.room,
@@ -83,10 +84,12 @@ export const HomeCard = () => {
                       <Slider
                         data={{
                           tittle: e.name,
+                          id: e.id,
                           value: e.value,
                           order: e.pin,
                           rooms: e.room,
                           important: e.important,
+                          edit: false,
                         }}
                       />
                     );
@@ -97,10 +100,12 @@ export const HomeCard = () => {
                       <Sensor
                         data={{
                           tittle: e.name,
+                          id: e.id,
                           value: e.value,
                           order: e.pin,
                           rooms: e.room,
                           important: e.important,
+                          edit: false,
                         }}
                       />
                     );

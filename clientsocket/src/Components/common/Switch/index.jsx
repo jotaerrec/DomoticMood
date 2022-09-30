@@ -11,7 +11,6 @@ export const Switch = ({ data }) => {
   const [response, setResponse] = useState();
   const [important, setImportant] = useState(data.important);
   let value = data.value === 0 ? false : true;
-  console.log(important);
   const changeImportant = async () => {
     try {
       let res = await axios({
@@ -39,6 +38,19 @@ export const Switch = ({ data }) => {
       setTittle(data.tittle);
       setEdit(false);
       console.log(err);
+    }
+    if (important) {
+      let pin = {
+        id: data.id,
+        pin: data.order,
+        name: tittle,
+        value: value,
+        important: important,
+        rooms: data.room,
+      };
+      let pins = JSON.parse(localStorage.getItem("pins"));
+      
+      
     }
   };
   const activarRelay = async () => {
