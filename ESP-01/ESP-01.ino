@@ -1,4 +1,3 @@
-
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
@@ -7,7 +6,6 @@
 #include<EEPROM.h>
 #include <WebSocketsClient.h>
 #include <SocketIOclient.h>
-
 #include <Hash.h>
 
 String pral = "<html>"
@@ -28,12 +26,6 @@ ESP8266WebServer server(80);
 char ssid[30];
 char pass[30];
 char host[30];
-String ssid_leido;
-String pass_leido;
-String host_leido;
-int ssid_tamano=0;
-int pass_tamano=0;
-int host_tamano=0;
 int port = 8080; // Socket.IO Port Address
 const char* path = "/socket.io/?EIO=4"; 
 
@@ -135,14 +127,28 @@ void setup() {
     server.begin();
     USE_SERIAL.println("...");
     USE_SERIAL.println("[WEBSERVER] Iniciado ...");
-    
-    intento_conexion();
-    socketIO.onEvent(socketIOEvent);
-    // server address, port and URL
 }
 
 unsigned long messageTimestamp = 0;
 void loop() {
+  if (USE_SERIAL.available())
+  {
+    String data =USE_SERIAL.readStringUntil('\n');
+    int index = data.indexOf(',');
+    int dataLength = data.length();
+    String command = data.substring(0, index);
+    String subS = data.substring(index + 1, dataLength);
+    
+    if (command == "[CONFIG]"){
+      int indexNetwork  = subS.indexOf("/@/");
+      String ssid = subS.substring(0, indexNetwork);
+      subS = subS.substring(indexNetwork + 3, subS.length());
+      indexNetwork = subS.indexOf("/@/");
+      String pass = subS.substring(0, indexNetwork);
+      String host = subS.substring(indexNetwork + 3, subS.length());
+      intento_conexion(ssid,pass,host);
+    }
+  }
     socketIO.loop();
     server.handleClient();
 }
@@ -174,48 +180,16 @@ String arregla_simbolos(String a){
    return a;
 }
 
-void graba(int addr,String a){
-  int tamano = (a.length()+1);
-  Serial.println(addr);
-  char inchar[tamano];
-  a.toCharArray(inchar,tamano);
-  EEPROM.write(addr,tamano);
-  for(int i=0;i<tamano; i++){
-    addr++;
-    EEPROM.write(addr,inchar[i]);
-    delay(500);
-  }
-  EEPROM.commit();
-  Serial.println("Grabado");
-}
-    
-String lee(int addr){
-    String nuevostring;
-    int valor;
-    int tamano=EEPROM.read(addr);
-    for(int i=0;i<tamano; i++){
-       addr++;
-       valor=EEPROM.read(addr);
-       nuevostring += (char)(valor);
-       delay(500);
-    }
-    return nuevostring;
-}
-
-void intento_conexion (){
-  if(lee(70).equals("configurado")){
-   ssid_leido=lee(1);// leemos ssid y clave.
-   pass_leido=lee(30);
-   host_leido=lee(110);
-   ssid_tamano=ssid_leido.length()+1;// calculamos la cantidad de caracteres que tiene el ssidyla clave
-   pass_tamano=pass_leido.length()+1;
-   host_tamano=host_leido.length()+1;
+void intento_conexion (String ssid_leido,String pass_leido,String host_leido){
+   int ssid_tamano=ssid_leido.length()+1;// calculamos la cantidad de caracteres que tiene el ssidyla clave
+   int pass_tamano=pass_leido.length()+1;
+   int host_tamano=host_leido.length()+1;
    ssid_leido.toCharArray(ssid,ssid_tamano);// transtornamos el string en un char array ya que es lo que nos pide WiFl.begin();
    pass_leido.toCharArray(pass,pass_tamano);
    host_leido.toCharArray(host,host_tamano);
    int cuenta=0;
    WiFi.begin(ssid,pass); // intentamos conectar
-   while(WiFi.status()!= WL_CONNECTED){
+   while(WiFi.status() != WL_CONNECTED){
     delay(1000);
     cuenta++;
     USE_SERIAL.println(cuenta);
@@ -228,9 +202,10 @@ void intento_conexion (){
     USE_SERIAL.print("Exito! Conectados a:");
     USE_SERIAL.println(ssid);
     socketIO.begin(host, 8080, path);
-  }
+    socketIO.onEvent(socketIOEvent);
   }
 }
+
 void wifi_conf(){
   int cuenta=0;
   String getssid = server.arg("ssid");// recibo los valores que envia por ger el formulario web
@@ -239,31 +214,28 @@ void wifi_conf(){
   getssid=arregla_simbolos(getssid);// reemplazo los simbolos que aparecen con UTFS con el simbolo correcto
   getpass=arregla_simbolos(getpass);
   gethost=arregla_simbolos(gethost);
-  ssid_tamano=getssid.length()+1;// calculamos la cantidad de caracteres que tiene el ssidyla clave
-  pass_tamano=getpass.length()+1;
-  host_tamano=gethost.length()+1;
+  int ssid_tamano=getssid.length()+1;// calculamos la cantidad de caracteres que tiene el ssidyla clave
+  int pass_tamano=getpass.length()+1;
+  int host_tamano=gethost.length()+1;
   getssid.toCharArray(ssid,ssid_tamano);// tabsformatos el string en un char array ya que es lo que nos pide 
   getpass.toCharArray(pass,pass_tamano);
   gethost.toCharArray(host,host_tamano);
-  Serial.println(getssid);// para depuración
-  Serial.println(getpass);
-  Serial.println(gethost);
   WiFi.begin(ssid,pass);// intentamos conectar
   while(WiFi.status() !=  WL_CONNECTED){
     delay(1000);
-    Serial.print(".");
+    USE_SERIAL.print(".");
     cuenta++;
-      if(cuenta> 20){
-        graba(70,"noconfigurado");
-        Serial.print("no se conecto");
-        return ;
-      }
+    if(cuenta> 20){
+     USE_SERIAL.print("[NOCONNECT]");
+      return ;
+    }
   }
-  graba(1  ,getssid);
-  graba(30 ,getpass);
-  graba(70 ,"configurado");
-  graba(110,gethost);
-  Serial.println("Se grabo");
+ USE_SERIAL.print("[CONFIG],");
+ USE_SERIAL.print(getssid);
+ USE_SERIAL.print("/@/");
+ USE_SERIAL.print(getpass);
+ USE_SERIAL.print("/@/");
+ USE_SERIAL.println(gethost);
   socketIO.begin(host, 8080, path);
   socketIO.onEvent(socketIOEvent);
   server.send(200,"text/html",String("<h2>Bien !!!! Conexion Exitosa a :"+getssid+"</h2><br> "));

@@ -1,8 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import styles from "./styles.module.scss";
 import socket from "../../../Controllers/socketapi";
-import { URL_API } from "../../../context/types";
-
 export const Switch = ({ data }) => {
   const inputRef = useRef();
   let value = data.value === 0 ? false : true;
@@ -33,7 +31,7 @@ export const Switch = ({ data }) => {
             className={styles.spanOrder}
             id={data.order}
             onClick={() => {
-              activarRelay();
+              changeState();
             }}
           ></span>
         </label>

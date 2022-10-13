@@ -39,7 +39,6 @@ export const CardScreen = ({ screen }) => {
       setData("");
     } catch (err) {
       setData("");
-      localStorage.removeItem(`pins:${screen}`);
     }
   };
   useEffect(() => {

@@ -49,8 +49,7 @@ export const Switch = ({ data }) => {
         rooms: data.room,
       };
       let pins = JSON.parse(localStorage.getItem("pins"));
-      
-      
+      pins.push(pin);
     }
   };
   const activarRelay = async () => {

@@ -36,9 +36,17 @@ void loop() {
       DEBUG(pass)
       String host = subS.substring(indexNetwork + 3, subS.length());
       DEBUG(host)
+      graba(1,ssid);
+      graba(30,pass);
+      graba(70,"configurado");
+      graba(90,host);
+    }
+    if (command == "[NOCONNECT]"){
+      graba(70,"noconfigurado");
     }
   }
 }
+
 
 void graba(int addr,String a){
   int tamano = (a.length()+1);
@@ -76,7 +84,7 @@ void intento_conexion (){
     Serial.print("/@/");
     Serial.print(pass_leido);
     Serial.print("/@/");
-    Serial.print(host_leido);
+    Serial.println(host_leido);
   }
 }
 
