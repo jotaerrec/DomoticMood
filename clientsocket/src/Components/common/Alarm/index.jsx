@@ -1,16 +1,20 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import socket from "../../../Controllers/socketapi";
+
 export const Switch = ({ data }) => {
+  //Variables
   const inputRef = useRef();
-  let value = data.value === 0 ? false : true;
-  console.log(data);
+  const [value, setValue] = useState(data.value === 0 ? false : true);
+
+  //Funciones
   const changeState = async () => {
-    value = !value;
+    setValue(!value);
     inputRef.current.checked = value;
     console.log(`Alarm=[${data.order}, ${value}]`);
     socket.emit("SwitchChange", `Switch=[${data.order},${value}]`);
   };
+
   return (
     <>
       <li className={styles.checkboxLi}>

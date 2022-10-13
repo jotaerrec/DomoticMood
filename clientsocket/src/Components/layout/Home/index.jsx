@@ -75,6 +75,7 @@ export const HomeCard = () => {
                             rooms: e.room,
                             important: e.important,
                             edit: false,
+                            index: i,
                           }}
                         />
                       </>
@@ -90,6 +91,7 @@ export const HomeCard = () => {
                           rooms: e.room,
                           important: e.important,
                           edit: false,
+                          index: i,
                         }}
                       />
                     );
@@ -106,6 +108,7 @@ export const HomeCard = () => {
                           rooms: e.room,
                           important: e.important,
                           edit: false,
+                          index: i,
                         }}
                       />
                     );

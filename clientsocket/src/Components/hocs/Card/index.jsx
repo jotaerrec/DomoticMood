@@ -20,12 +20,14 @@ export const Card = () => {
     open: false,
   });
   const token = localStorage.getItem("x-access-token");
+
   // Funciones
   socket.on("UserConfigure", async (data) => {
     socket.emit("ConfigureUser", token);
   });
 
   const switchScreen = () => {
+    //Seleccionar Pantalla a renderizar
     switch (screen) {
       case HOME:
         return (
@@ -72,6 +74,7 @@ export const Card = () => {
     }
   };
   const verifyToken = async () => {
+    //Verificar token
     if (token && typeof token !== "undefined") {
       try {
         let res = await axios({
@@ -104,9 +107,12 @@ export const Card = () => {
       }
     } else return setDisplayName(LOGIN);
   };
+
+  //Verificar token continuamente
   useEffect(() => {
     verifyToken();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
   return <div className={styles.Card}>{switchScreen()}</div>;
 };
