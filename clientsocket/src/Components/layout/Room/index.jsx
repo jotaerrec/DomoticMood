@@ -6,12 +6,16 @@ import { Slider } from "Common/Slider";
 import { URL_API } from "Context/types";
 
 export const CardScreen = ({ screen }) => {
-  console.log(screen);
+  //Variables
   const [data, setData] = useState(
     JSON.parse(localStorage.getItem(`pins:${screen}`))
   );
   const [renderData, setRenderData] = useState();
+
+  //funciones
+
   const getElements = async () => {
+    //Obtiene elementos
     try {
       let res = await axios({
         url: URL_API + "/pins/",
@@ -23,18 +27,22 @@ export const CardScreen = ({ screen }) => {
           room: screen,
         },
       });
+      //Verifica que devuelva los elementos
       if (res.status === 202) {
         console.log("hola");
         if (res.data.pins.length === 0) {
           setData("");
+
           return;
         } else {
           setData(res.data.pins);
           console.log(data);
           localStorage.setItem(`pins:${screen}`, JSON.stringify(res.data.pins));
+
           return;
         }
       }
+
       localStorage.removeItem(`pins:${screen}`);
       setData("");
     } catch (err) {

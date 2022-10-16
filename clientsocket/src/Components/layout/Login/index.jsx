@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import axios from "axios";
 import { URL_API } from "Context/types";
 import socket from "Controllers/socketapi";
 
 export const LoginCard = ({ args }) => {
+  //Variables
   const [response, setResponse] = useState({
     error: args?.notifications ? args.notifications : "",
   });
@@ -17,7 +18,10 @@ export const LoginCard = ({ args }) => {
   });
   const [loading, setLoading] = useState(false);
 
+  //Funciones
+
   const tokenResponse = (tokenRes) => {
+    //obtiene el token
     localStorage.setItem("x-access-token", JSON.stringify(tokenRes));
     window.location.reload();
   };
@@ -27,6 +31,7 @@ export const LoginCard = ({ args }) => {
   };
 
   const login = async (e) => {
+    //Hace la llamada a la api para iniciar sesión
     e.preventDefault();
     try {
       setLoading(true);
@@ -38,6 +43,7 @@ export const LoginCard = ({ args }) => {
         data: data,
       });
       if (!res.data.error && res.status === 202) {
+        //Verifica que no haya error
         localStorage.setItem("rooms", "[]");
         tokenResponse(res.data.token);
         setLoading(false);
@@ -52,6 +58,7 @@ export const LoginCard = ({ args }) => {
   };
 
   const register = async (e) => {
+    //Hace la llamada a la api para registrar usuario
     e.preventDefault();
     try {
       setLoading(true);
@@ -70,7 +77,6 @@ export const LoginCard = ({ args }) => {
 
       setLoading(false);
       return setResponse({ error: res.data.error || "Rellene los campos" });
-      // Don't forget to return something
     } catch (err) {
       setResponse({ erorr: "Problema con la api" });
       setLoading(false);

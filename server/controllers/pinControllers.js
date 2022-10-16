@@ -3,20 +3,23 @@ const usersRouter = require("express").Router();
 const User = require("../models/usersModel");
 const Pin = require("../models/pinConfigModel");
 
-//Verificar si estan bien los objectos
-
+//Funciones
 module.exports = {
+  //Crear prin
   create: async function (req, res) {
     const { name, pin, type, typeUse, room, userID } = req.body;
+
     try {
       if (!name || !pin || !typeUse || !room)
         return res.status(204).json({ error: 'Required "content" is field' });
 
       const user = await User.findById(userID);
       if (!user) return res.status(200).json({ error: "User not found" });
+
       const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
       if (verifyPin)
         return res.status(200).json({ error: `Este pin ya esta en uso` });
+
       const verifyRoom = await User.findOne({ userID: userID, room: room });
       if (!verifyRoom)
         return res.status(200).json({ error: `Esta habitación no existe` });
@@ -29,6 +32,7 @@ module.exports = {
         typeUse: typeUse,
         room: room,
       });
+
       const document = await pinConfig.save();
       res.status(202).json(document);
     } catch (error) {
@@ -36,20 +40,27 @@ module.exports = {
       console.log(error);
     }
   },
+
+  //Cambiar el nombre del pin
   changeName: async function (req, res) {
     const { userID, pin, name } = req.body;
+
     try {
       if (!pin)
         return res.status(204).json({ error: 'Required "content" is field' });
+
       const user = await User.findById(userID);
       if (!user) return res.status(204).json({ error: "User not found" });
+
       const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
       if (!verifyPin)
         return res.status(200).json({ error: `Este pin no existe` });
+
       const document = await Pin.findOneAndUpdate(
         { pin, userID },
         { name: name }
       );
+
       res.status(202).json({ message: "Se actualizo correctamente" });
     } catch (error) {
       res
@@ -57,21 +68,27 @@ module.exports = {
         .json({ error: "Error al actualizar el pin. Intentelo nuevamente" });
     }
   },
+
+  //Actualizar pin
   updatePin: async function (req, res) {
     const { userID, pin, pinNew } = req.body;
+
     try {
       if (!pin || !pinNew)
         return res.status(204).json({ error: 'Required "content" is field' });
 
       const user = await User.findById(userID);
       if (!user) return res.status(204).json({ error: "User not found" });
+
       const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
       if (verifyPin)
         return res.status(200).json({ error: `Este pin ya esta en uso` });
+
       const document = await Pin.findOneAndUpdate(
         { pin, userID },
         { pin: pinNew }
       );
+
       res.status(201).json(document);
     } catch (error) {
       res
@@ -79,22 +96,27 @@ module.exports = {
         .json({ error: "Error al actualizar el pin. Intentelo nuevamente" });
     }
   },
+
+  //Cambiar el estado de important
   changeImportant: async function (req, res) {
     const { userID, pin, important } = req.body;
+
     try {
-      console.log(important);
       if (!pin)
         return res.status(204).json({ error: 'Required "content" is field' });
+
       const user = await User.findById(userID);
       if (!user) return res.status(204).json({ error: "User not found" });
+
       const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
       if (!verifyPin)
         return res.status(200).json({ error: `Este pin no existe` });
+
       const document = await Pin.findOneAndUpdate(
         { pin, userID },
         { important: important }
       );
-      console.log(document);
+
       res.status(202).json({ message: "Se actualizo correctamente" });
     } catch (error) {
       console.log(error);
@@ -103,31 +125,43 @@ module.exports = {
         .json({ error: "Error al actualizar el pin. Intentelo nuevamente" });
     }
   },
+
+  //Eliminar pin
   delete: async function (req, res) {
     const { userID, pin } = req.body;
+
     try {
       if (!pin)
         return res
           .status(204)
           .json({ error: "Se requiere rellenar los campos" });
+
       const document = await Pin.findOneDelete({ pin: pin, userID: userID });
+
       res.status(202).json({ message: "Se elimino con exito" });
     } catch (e) {
       return res.status(200).json({ error: "Error al eliminar" });
     }
   },
+
+  //Obtener todos los pines
   getAll: async function (req, res) {
     try {
-      const { userID } = req.body;
-      const room = req.headers["room"] || false;
-      const user = await User.findById(userID);
       let pins;
+
+      const { userID } = req.body;
+
+      const user = await User.findById(userID);
       if (!user)
         return res.status(200).json({ error: "Este usuario no existe" });
+
+      const room = req.headers["room"] || false;
       if (room) pins = await Pin.find({ userID: userID, room });
       else pins = await Pin.find({ userID: userID, important: true });
+
       if ((!pins || pins.length <= 0) && user.rooms <= 0)
         return res.status(204).json({ error: "No tiene pines en uso" });
+
       res.status(202).json({
         rooms: user.rooms,
         pins: pins,

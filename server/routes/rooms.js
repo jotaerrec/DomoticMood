@@ -3,7 +3,6 @@ const app = express();
 const router = express.Router();
 const rooms = require("../controllers/roomsControllers");
 
-/* GET users listing. */
 router.get(
   "/",
   (req, res, next) => {
@@ -11,6 +10,7 @@ router.get(
   },
   rooms.getAll
 );
+
 router.post(
   "/",
   (req, res, next) => {
@@ -18,6 +18,7 @@ router.post(
   },
   rooms.create
 );
+
 router.delete(
   "/",
   (req, res, next) => {

@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 
 //Verify User using jwt
 module.exports = {
+  //Validar usuario
+
   validateUser: function validateUser(req, res, next) {
     jwt.verify(
       req.headers["x-access-token"],

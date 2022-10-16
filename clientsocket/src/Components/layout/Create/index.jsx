@@ -4,10 +4,13 @@ import FormRoom from "./Components/Room";
 import styles from "./styles.module.scss";
 
 export const AddScreen = () => {
+  //Variables
   const [buttonName, setButtonName] = useState("pin");
+  //Funciones
   const changeButton = (nameOl) => {
     setButtonName(nameOl);
   };
+
   return (
     <>
       <div className={`${styles.cardMain} animate__animated animate__fadeIn`}>

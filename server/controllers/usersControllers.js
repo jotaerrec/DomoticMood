@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const arduinoCodeModel = require("../models/arduinoCodeModel");
 
 module.exports = {
+  //Crear usuario
   create: async function (req, res, next) {
     const { username, email, password, arduinoID } = req.body;
     try {
@@ -46,6 +47,8 @@ module.exports = {
       res.json({ error: "Error al crear el usuario" });
     }
   },
+
+  //Iniciar Sesión
   login: async (req, res, next) => {
     const { email, password } = req.body;
     try {
@@ -55,8 +58,10 @@ module.exports = {
           .json({ error: "Requiere que rellene los campos" });
 
       const user = await usersModel.findOne({ email: email });
+
       const passwordCorrect =
         user === null ? false : await bcrypt.compare(password, user.password);
+
       if (!passwordCorrect) {
         return res.status(200).json({
           error: "Usuario o contraseña incorrecta",
@@ -68,7 +73,6 @@ module.exports = {
         req.app.get("secretKey"),
         {}
       );
-      console.log(token);
 
       return res.status(202).json({
         message: "Se inicio sesion correctamente",
@@ -79,6 +83,8 @@ module.exports = {
       res.status(200).json({ error: "Error al iniciar sesión" });
     }
   },
+
+  //Crear codigo de arduino
   createArduinoId: async (req, res, next) => {
     const { idArduino } = req.body;
     try {

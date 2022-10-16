@@ -1,2 +1,0 @@
-echo "ON"
-npm start

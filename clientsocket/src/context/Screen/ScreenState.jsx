@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { ScreenContext } from "./ScreenContext";
 
 export const ScreenController = (props) => {
+  //Variables
+
   const initialState = {
     displayName: "",
     notifications: "",
@@ -9,6 +11,7 @@ export const ScreenController = (props) => {
 
   const [screen, setScreen] = useState(initialState);
 
+  //Funciones
   const setDisplayName = (name, arg) => {
     let notifications;
     !arg ? (notifications = "") : (notifications = arg);

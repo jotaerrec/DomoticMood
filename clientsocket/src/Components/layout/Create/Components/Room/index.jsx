@@ -4,6 +4,7 @@ import axios from "axios";
 import { URL_API } from "Context/types";
 
 const FormRoom = () => {
+  //Varialbes
   const [response, setResponse] = useState({
     error: "",
   });
@@ -11,7 +12,10 @@ const FormRoom = () => {
   const [data, setData] = useState({
     name: "",
   });
+
+  //Funciones
   const createRoom = async (e) => {
+    //Crear habitación
     e.preventDefault();
     try {
       setLoading(true);
@@ -33,13 +37,13 @@ const FormRoom = () => {
 
       setLoading(false);
       return setResponse({ error: res.data.error });
-      // Don't forget to return something
     } catch (err) {
       setResponse({ error: "Problema con la api" });
       setLoading(false);
       console.log(err);
     }
   };
+
   const HandleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };

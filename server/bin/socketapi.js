@@ -13,19 +13,26 @@ const Users = new Map();
 
 io.on("connection", function (socket) {
   socket.emit("PONG");
+
   console.log("A user connected", socket.id);
+
   socket.emit("UserConfigure");
+
   socket.on("ConfigureUser", async (data) => {
+    //Verifica y guarda el usuario conectado
     data = data?.substr(1, data.length - 2);
+
     let user = {};
     await jwt.verify(data, process.env.SECRETKEY, function (err, decoded) {
       if (err) {
-        console.log(err);
+        console.log("No se pudo verificar");
       } else {
         user.ID = decoded.userID;
       }
     });
+
     let dataTemp = await Users.get(user.ID);
+
     if (dataTemp) {
       if (dataTemp.indexOf(socket) == -1) dataTemp.push(socket);
       else return console.log(`Usuario ya guardado anteriormente`);
@@ -36,16 +43,23 @@ io.on("connection", function (socket) {
     Users.set(user.ID, dataTemp);
     console.log(`[ Save User SocketID=[${socket.id}] -- KeyID=${user.ID} ]`);
   });
+
   socket.on("ConfigureAtmega", (data) => {
-    console.log("[CONFIGURANDO]");
+    //Guarda el socket del ATMEGA
+    console.log("[CONFIGURADO]");
     arduino.socket.set(data.now, socket);
     console.log(data.now);
   });
+
   socket.on("SwitchChange", async function (data) {
+    //Obtiene el cambio de valores recibidos desde el cliente
     try {
       let user = {};
+
       let value = data.split("token:");
+
       console.log(value[0]);
+
       jwt.verify(value[1], process.env.SECRETKEY, function (err, decoded) {
         if (err) {
           console.log(err);
@@ -53,7 +67,9 @@ io.on("connection", function (socket) {
           user.id = decoded.userID;
         }
       });
+
       user = await User.findById(user.id);
+
       arduinoCode = await Arduino.findById(user.arduinoID);
       await UpdateValue(value[0], arduinoCode.idArduino, user.id);
     } catch (error) {
@@ -61,14 +77,18 @@ io.on("connection", function (socket) {
     }
   });
   socket.on("SensorValue", async function (data) {
+    //Obtiene el valor desde el microcontrolador
     try {
       let valueSplit = data.split("Token:");
+
       arduinoCode = await Arduino.findById(valueSplit[1]);
+
       let user = await User.findOne({ arduinoID: arduinoCode.id });
       let { pin, value } = getValue(valueSplit[0], user.ID);
 
       // Se emiten los valores hacia el cliente
       let SocketUsers = Users.get(user.id);
+
       if (socketUsers.length > 0) {
         SocketUsers.map(async (e, i) => {
           if (e.connected) e.emit(`SensorValue=${pin}`, value);
@@ -81,8 +101,11 @@ io.on("connection", function (socket) {
 });
 
 const getValue = async (value, ID) => {
+  //Obtiene los valores
   let arrayValue = value.split("=");
+
   arrayValue[1] = arrayValue[1].replace("[", "").replace("]", "").split(",");
+
   try {
     let result = await Pin.findOneAndUpdate(
       { pin: arrayValue[1][0], userID: ID },
@@ -91,28 +114,33 @@ const getValue = async (value, ID) => {
   } catch (error) {
     console.log(error);
   }
+
   Value = {
     pin: arrayValue[1][0],
     value: arrayValue[1][1],
   };
 };
 
+//Actualizar valor
 const UpdateValue = async (value, arduinoID, ID) => {
   try {
     let statePin;
-    console.log(value);
-    console.log(arduinoID);
+
     let arrayValue = value.split("=");
+
+    //Reemplaza los strings
     arrayValue[1] = arrayValue[1].replace("[", "").replace("]", "").split(",");
     arrayValue[1][1] === "true" ? (statePin = 1) : (statePin = 0);
 
     console.log(statePin, arrayValue[1][0]);
+
     let result = await Pin.findOneAndUpdate(
       { pin: arrayValue[1][0], userID: ID },
       { value: statePin }
     );
-    console.log(result);
+
     let socketEmit = arduino.socket.get(arduinoID);
+
     try {
       socketEmit?.emit(value);
     } catch (error) {

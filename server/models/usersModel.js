@@ -1,17 +1,19 @@
 const mongoose = require("../bin/mongodb");
 const errorMessage = require("../util/errorMessage");
 const validators = require("../util/validators");
-const bcrypt = require("bcrypt");
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, errorMessage.GENERAL.campo_obligatorio],
   },
+
   email: {
     type: String,
     required: [true, errorMessage.GENERAL.campo_obligatorio],
     unique: true,
   },
+
   password: {
     type: String,
     required: [true, errorMessage.GENERAL.campo_obligatorio],
@@ -21,14 +23,17 @@ const userSchema = new mongoose.Schema({
       },
     },
   },
+
   arduinoID: {
     type: mongoose.Schema.ObjectId,
     ref: "arduinoCode",
   },
+
   rooms: {
     type: [String],
   },
 });
+
 userSchema.statics.findBydIdAndValidate = async function (id) {
   const document = await this.findById(id);
   if (!document) {
@@ -48,4 +53,5 @@ userSchema.set("toJSON", {
     delete returnedObject.password;
   },
 });
+
 module.exports = mongoose.model("users", userSchema);

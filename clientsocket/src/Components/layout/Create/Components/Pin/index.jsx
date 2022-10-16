@@ -4,11 +4,12 @@ import axios from "axios";
 import { URL_API } from "Context/types";
 
 const FormPin = () => {
+  //Variables
+
   const rooms = JSON.parse(localStorage.getItem("rooms")) || [];
   const [response, setResponse] = useState({
     error: "",
   });
-  console.log(rooms);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -18,7 +19,9 @@ const FormPin = () => {
     room: "",
   });
 
+  //Funciones
   const roomsItems = () => {
+    //Recorre la habitación
     if (rooms.length > 0) {
       return (
         <>
@@ -44,6 +47,7 @@ const FormPin = () => {
   };
 
   const createPin = async (e) => {
+    //Funcion para crear pin
     e.preventDefault();
     try {
       setLoading(true);
@@ -74,6 +78,7 @@ const FormPin = () => {
       console.log(err);
     }
   };
+
   const HandleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };

@@ -3,7 +3,6 @@ const app = express();
 const router = express.Router();
 const pin = require("../controllers/pinControllers");
 
-/* GET users listing. */
 router.get(
   "/",
   (req, res, next) => {
@@ -11,6 +10,7 @@ router.get(
   },
   pin.getAll
 );
+
 router.post(
   "/",
   (req, res, next) => {
@@ -18,6 +18,7 @@ router.post(
   },
   pin.create
 );
+
 router.post(
   "/important",
   (req, res, next) => {
@@ -25,6 +26,7 @@ router.post(
   },
   pin.changeImportant
 );
+
 router.put(
   "/",
   (req, res, next) => {
@@ -32,6 +34,7 @@ router.put(
   },
   pin.changeName
 );
+
 router.patch(
   "/",
   (req, res, next) => {
@@ -39,6 +42,7 @@ router.patch(
   },
   pin.updatePin
 );
+
 router.delete(
   "/",
   (req, res, next) => {

@@ -1,9 +1,0 @@
-[
-    {
-        "name": "Alarma 1",
-        "pin": "20",
-        "type": true,
-        "typeUse": "alarm",
-        "room": "Living"
-    }
-]

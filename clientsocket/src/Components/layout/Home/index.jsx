@@ -7,9 +7,13 @@ import { Sensor } from "Common/Sensor";
 import { URL_API } from "Context/types";
 
 export const HomeCard = () => {
+  //Variables
   const [data, setData] = useState(JSON.parse(localStorage.getItem("pins")));
   const [renderData, setRenderData] = useState();
+
+  //Funciones
   const getElements = async () => {
+    //Obtener elementos
     try {
       let res = await axios({
         url: URL_API + "/pins/",
@@ -27,9 +31,10 @@ export const HomeCard = () => {
           setData(res.data.pins);
           localStorage.setItem("pins", JSON.stringify(res.data.pins));
         }
+
         return localStorage.setItem("rooms", JSON.stringify(res.data.rooms));
-        // Don't forget to return something
       }
+
       localStorage.removeItem("pins");
       setData("");
     } catch (err) {
@@ -41,6 +46,7 @@ export const HomeCard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      //Obtiene el tiempo en el que se hace la call
       let date = localStorage.getItem("dateGetPins");
       const actualDate = new Date();
       if (date && typeof date !== "undefined") {
@@ -54,7 +60,6 @@ export const HomeCard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    console.log(renderData);
     if (data) {
       setRenderData(
         <div className={styles.homeCard}>

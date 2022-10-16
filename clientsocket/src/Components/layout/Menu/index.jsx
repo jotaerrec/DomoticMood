@@ -1,13 +1,16 @@
 import React, { useContext, useState } from "react";
 import { ScreenContext } from "Context/Screen/ScreenContext";
 import styles from "./styles.module.scss";
-import { URL_API } from "Context/types";
 
 export const CardMenu = () => {
+  //Variables
   const rooms = JSON.parse(localStorage.getItem("rooms"));
-  console.log(rooms.length);
   const { setDisplayName } = useContext(ScreenContext);
+
+  //Funciones
+
   const renderRooms = () => {
+    //Renderiza las habitaciones
     return (
       <>
         <ul>
@@ -30,6 +33,7 @@ export const CardMenu = () => {
       </>
     );
   };
+
   return (
     <div className={styles.cardMenu}>
       {rooms.length > 0 ? renderRooms() : <h1>No tienes habitaciones.</h1>}
