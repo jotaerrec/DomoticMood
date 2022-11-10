@@ -17,6 +17,8 @@ export const LoginCard = ({ args }) => {
     arduinoID: "",
   });
   const [loading, setLoading] = useState(false);
+  localStorage.removeItem("pins");
+  localStorage.removeItem("dateGetPins");
 
   //Funciones
 

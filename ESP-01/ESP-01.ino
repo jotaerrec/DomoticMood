@@ -13,102 +13,25 @@ String pral = "<html>"
 "<title>WIFI CONFIG</title><style type='text/css'>body,td,th{ color:#036; } body{background-color:#999;}</style></head>"
 "<body>"
 "<h1> WIFI CONF</hl><br>"
-    "<form action='config' method='get' target='pantalla' id='form'><fieldset align='left' style='border-style:solid;border-color:#336666;width:200px;height:180px;padding:10px;margin:5px;'><legend><strong>Contifurar WI-FI</strong></legend>SSID:<br><input name='ssid' type='text' size='15'><br> <br>PASSWORD:<br><input name='pass' type='password' size='15'>HOST:<br><input name='host' type='text' size='30'><input type='submit' value='setear conexion'></fieldset></form>"
-        // "<iframe id='pantalla'name='pantalla'src='' width=900px height-400px frameborder='0'scrolling='no'></iframe>"
+    "<form action='config' method='get' target='pantalla' id='form'><fieldset align='left' style='border-style:solid;border-color:#336666;width:200px;height:180px;padding:10px;margin:5px;'><legend><strong>Contifurar WI-FI</strong></legend>SSID:<br><input name='ssid' type='text' size='15'><br> <br>PASSWORD:<br><input name='pass' type='password' size='15'><input type='submit' value='Conectar'></fieldset></form>"
+     "<iframe id='pantalla'name='pantalla'src='' width=900px height-400px frameborder='0'scrolling='no'></iframe>"
 "</body>"
 "</html>";
 
-ESP8266WiFiMulti wifiMulti;
 SocketIOclient socketIO;
 ESP8266WebServer server(80);
 
 /// WIFI Settings ///
 char ssid[30];
 char pass[30];
-char host[30];
+const char* host = "https://API.javierrodrguez.repl.co";
 int port = 8080; // Socket.IO Port Address
-const char* path = "/socket.io/?EIO=4"; 
-
+const char* path = "/socket.io/?EIO=4";
 #define USE_SERIAL Serial
-
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
-    switch(type) {
-        case sIOtype_DISCONNECT:
-            USE_SERIAL.printf("[IOc] Disconnected!\n");
-            socketIO.begin(host, 8080, path);
-            break;
-        case sIOtype_CONNECT:
-            USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
-
-            // join default namespace (no auto join in Socket.IO V3)
-            socketIO.send(sIOtype_CONNECT, "/");
-            break;
-        case sIOtype_EVENT:
-        {
-            char * sptr = NULL;
-            int id = strtol((char *)payload, &sptr, 10);
-            USE_SERIAL.printf("[IOc] get event: %s id: %d\n", payload, id);
-            
-            if(strstr((char *)payload, "PONG"))
-              emitSocket("ConfigureAtmega", "$2a$12$8yibsMKrr/CFAKwk1y6TdOiN85crdCc9228cCiaaZ9djucC4fe1he");
-
-            if(id)
-              payload = (uint8_t *)sptr;
-        
-            DynamicJsonDocument doc(1024);
-            DeserializationError error = deserializeJson(doc, payload, length);
-            
-            if(error) {
-                USE_SERIAL.print(F("deserializeJson() failed: "));
-                USE_SERIAL.println(error.c_str());
-                return;
-            }
-            
-            String eventName = doc[0];
-            USE_SERIAL.printf("[Command],%s\n", eventName.c_str());
-            
-            if(id) {
-                // creat JSON message for Socket.IO (ack)
-                DynamicJsonDocument docOut(1024);
-                JsonArray array = docOut.to<JsonArray>();
-
-                // add payload (parameters) for the ack (callback function)
-                JsonObject param1 = array.createNestedObject();
-                param1["now"] = millis();
-
-                // JSON to String (serializion)
-                String output;
-                output += id;
-                serializeJson(docOut, output);
-
-                // Send event
-                socketIO.send(sIOtype_ACK, output);
-            }
-        }
-            break;
-        case sIOtype_ACK:
-            USE_SERIAL.printf("[IOc] get ack: %u\n", length);
-            hexdump(payload, length);
-            break;
-        case sIOtype_ERROR:
-            USE_SERIAL.printf("[IOc] get error: %u\n", length);
-            hexdump(payload, length);
-            break;
-        case sIOtype_BINARY_EVENT:
-            USE_SERIAL.printf("[IOc] get binary: %u\n", length);
-            hexdump(payload, length);
-            break;
-        case sIOtype_BINARY_ACK:
-            USE_SERIAL.printf("[IOc] get binary ack: %u\n", length);
-            hexdump(payload, length);
-            break;
-    }
-}
 
 void setup() {
     USE_SERIAL.begin(9600);
-    EEPROM.begin(4096);
-    //Serial.setDebugOutput(true);
+    USE_SERIAL.setDebugOutput(true);
     USE_SERIAL.println();
     USE_SERIAL.println();
     USE_SERIAL.println();
@@ -145,8 +68,7 @@ void loop() {
       subS = subS.substring(indexNetwork + 3, subS.length());
       indexNetwork = subS.indexOf("/@/");
       String pass = subS.substring(0, indexNetwork);
-      String host = subS.substring(indexNetwork + 3, subS.length());
-      intento_conexion(ssid,pass,host);
+      intento_conexion(ssid,pass);
     }
   }
     socketIO.loop();
@@ -180,13 +102,11 @@ String arregla_simbolos(String a){
    return a;
 }
 
-void intento_conexion (String ssid_leido,String pass_leido,String host_leido){
+void intento_conexion (String ssid_leido,String pass_leido){
    int ssid_tamano=ssid_leido.length()+1;// calculamos la cantidad de caracteres que tiene el ssidyla clave
    int pass_tamano=pass_leido.length()+1;
-   int host_tamano=host_leido.length()+1;
    ssid_leido.toCharArray(ssid,ssid_tamano);// transtornamos el string en un char array ya que es lo que nos pide WiFl.begin();
    pass_leido.toCharArray(pass,pass_tamano);
-   host_leido.toCharArray(host,host_tamano);
    int cuenta=0;
    WiFi.begin(ssid,pass); // intentamos conectar
    while(WiFi.status() != WL_CONNECTED){
@@ -194,6 +114,7 @@ void intento_conexion (String ssid_leido,String pass_leido,String host_leido){
     cuenta++;
     USE_SERIAL.println(cuenta);
     if(cuenta>20){
+     server.send(200,"text/html",String("<h2>Error! No se pudo conectar a:"+ssid_leido+"</h2><br> "));
      USE_SERIAL.println("Fallo en la Conexion");
      return;
     }
@@ -210,32 +131,27 @@ void wifi_conf(){
   int cuenta=0;
   String getssid = server.arg("ssid");// recibo los valores que envia por ger el formulario web
   String getpass = server.arg("pass");
-  String gethost = server.arg("host");
   getssid=arregla_simbolos(getssid);// reemplazo los simbolos que aparecen con UTFS con el simbolo correcto
   getpass=arregla_simbolos(getpass);
-  gethost=arregla_simbolos(gethost);
   int ssid_tamano=getssid.length()+1;// calculamos la cantidad de caracteres que tiene el ssidyla clave
   int pass_tamano=getpass.length()+1;
-  int host_tamano=gethost.length()+1;
   getssid.toCharArray(ssid,ssid_tamano);// tabsformatos el string en un char array ya que es lo que nos pide 
   getpass.toCharArray(pass,pass_tamano);
-  gethost.toCharArray(host,host_tamano);
-  WiFi.begin(ssid,pass);// intentamos conectar
+  WiFi.begin(getssid,getpass);// intentamos conectar
   while(WiFi.status() !=  WL_CONNECTED){
     delay(1000);
-    USE_SERIAL.print(".");
+    USE_SERIAL.println(".");
     cuenta++;
     if(cuenta> 20){
-     USE_SERIAL.print("[NOCONNECT]");
-      return ;
+     USE_SERIAL.println("[NOCONNECT]");
+     server.send(200,"text/html",String("<h2>Error! No se pudo conectar a:"+getssid+"</h2><br> ")); 
+     return ;
     }
   }
- USE_SERIAL.print("[CONFIG],");
- USE_SERIAL.print(getssid);
- USE_SERIAL.print("/@/");
- USE_SERIAL.print(getpass);
- USE_SERIAL.print("/@/");
- USE_SERIAL.println(gethost);
+  USE_SERIAL.print("[CONFIG],");
+  USE_SERIAL.print(getssid);
+  USE_SERIAL.print("/@/");
+  USE_SERIAL.println(getpass);
   socketIO.begin(host, 8080, path);
   socketIO.onEvent(socketIOEvent);
   server.send(200,"text/html",String("<h2>Bien !!!! Conexion Exitosa a :"+getssid+"</h2><br> "));
@@ -243,27 +159,95 @@ void wifi_conf(){
 
 void emitSocket(const String event, const String payload)
 {
+  
+    // creat JSON message for Socket.IO (event)
+    DynamicJsonDocument doc(1024);
+    JsonArray array = doc.to<JsonArray>();
+    // add event name
+    // Hint: socket.on('event_name', ....
+    array.add(event);
+    // add payload (parameters) for the event
+    JsonObject param1 = array.createNestedObject();
+    param1["now"] = payload;
+    // JSON to String (serializion)
+    String output;
+    serializeJson(doc, output);
+    // Send event
+    socketIO.sendEVENT(output);
+    // Print JSON for debugging
+    USE_SERIAL.println(output);
 
-        // creat JSON message for Socket.IO (event)
-        DynamicJsonDocument doc(1024);
-        JsonArray array = doc.to<JsonArray>();
+}
+void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
+    switch(type) {
+        case sIOtype_DISCONNECT:
+        
+            USE_SERIAL.printf("[IOc] Disconnected!\n");
+            socketIO.begin(host, 8080, path);
+            
+        break;
+        case sIOtype_CONNECT:
+        
+            USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
 
-        // add evnet name
-        // Hint: socket.on('event_name', ....
-        array.add(event);
+            // join default namespace (no auto join in Socket.IO V3)
+            socketIO.send(sIOtype_CONNECT, "/");
+        
+        break;
+        case sIOtype_EVENT:
+        
+            char * sptr = NULL;
+            int id = strtol((char *)payload, &sptr, 10);
+            USE_SERIAL.printf("[IOc] get event: %s id: %d\n", payload, id);
+            
+            if(strstr((char *)payload, "PONG"))
+              emitSocket("ConfigureAtmega", "$2a$12$8yibsMKrr/CFAKwk1y6TdOiN85crdCc9228cCiaaZ9djucC4fe1he");
+            if(id)
+              payload = (uint8_t *)sptr;
+            DynamicJsonDocument doc(1024);
+            DeserializationError error = deserializeJson(doc, payload, length);            
+            if(error) {
+                USE_SERIAL.print(F("deserializeJson() failed: "));
+                USE_SERIAL.println(error.c_str());
+                return;
+            }            
+            String eventName = doc[0];
+            USE_SERIAL.printf("[Command],%s\n", eventName.c_str());            
+            if(id) {
+                // creat JSON message for Socket.IO (ack)
+                DynamicJsonDocument docOut(1024);
+                JsonArray array = docOut.to<JsonArray>();
 
-        // add payload (parameters) for the event
-        JsonObject param1 = array.createNestedObject();
-        param1["now"] = payload;
+                // add payload (parameters) for the ack (callback function)
+                JsonObject param1 = array.createNestedObject();
+                param1["now"] = millis();
 
-        // JSON to String (serializion)
-        String output;
-        serializeJson(doc, output);
+                // JSON to String (serializion)
+                String output;
+                output += id;
+                serializeJson(docOut, output);
 
-        // Send event
-        socketIO.sendEVENT(output);
-
-        // Print JSON for debugging
-        USE_SERIAL.println(output);
-    
+                // Send event
+                socketIO.send(sIOtype_ACK, output);
+            }
+        
+        break;
+        case sIOtype_ACK:
+            
+            USE_SERIAL.printf("[IOc] get ack: %u\n", length);
+            hexdump(payload, length);
+        break;
+        case sIOtype_ERROR:
+            USE_SERIAL.printf("[IOc] get error: %u\n", length);
+            hexdump(payload, length);
+            break;
+        case sIOtype_BINARY_EVENT:
+            USE_SERIAL.printf("[IOc] get binary: %u\n", length);
+            hexdump(payload, length);
+            break;
+        case sIOtype_BINARY_ACK:
+            USE_SERIAL.printf("[IOc] get binary ack: %u\n", length);
+            hexdump(payload, length);
+            break;
+    }
 }

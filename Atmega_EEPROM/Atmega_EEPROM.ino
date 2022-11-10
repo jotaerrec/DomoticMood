@@ -1,15 +1,24 @@
+#include <SoftwareSerial.h>
 #include<EEPROM.h>
 #define DEBUG(a) Serial.println(a);
+
 /// WIFI Settings ///
 String ssid_leido;
 String pass_leido;
 String host_leido;
+
+SoftwareSerial SoftSerial(2, 3); // RX, TX
+
     
 void setup() {
   Serial.begin(9600);
+  Serial.begin(9600);
+  pinMode(12, OUTPUT);
+  Serial.println("Init Serial");
 }
 
 void loop() {
+  intento_conexion();
   if (Serial.available())
   {
     String data = Serial.readStringUntil('\n');
@@ -72,9 +81,10 @@ String lee(int addr){
        nuevostring += (char)(valor);
        delay(500);
     }
+    Serial.println(nuevostring);
     return nuevostring;
 }
-void intento_conexion (){
+void intento_conexion(){
   if(lee(70).equals("configurado")){
     ssid_leido=lee(1);
     pass_leido=lee(30);
@@ -82,9 +92,7 @@ void intento_conexion (){
     Serial.print("[CONFIG],");
     Serial.print(ssid_leido);
     Serial.print("/@/");
-    Serial.print(pass_leido);
-    Serial.print("/@/");
-    Serial.println(host_leido);
+    Serial.println(pass_leido);
   }
 }
 
