@@ -212,7 +212,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
                 return;
             }            
             String eventName = doc[0];
-            USE_SERIAL.printf("[Command],%s\n", eventName.c_str());            
+            USE_SERIAL.printf("%s\n", eventName.c_str());            
             if(id) {
                 // creat JSON message for Socket.IO (ack)
                 DynamicJsonDocument docOut(1024);
