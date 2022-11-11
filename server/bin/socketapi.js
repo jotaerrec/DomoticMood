@@ -44,11 +44,17 @@ io.on("connection", function (socket) {
     console.log(`[ Save User SocketID=[${socket.id}] -- KeyID=${user.ID} ]`);
   });
 
-  socket.on("ConfigureAtmega", (data) => {
+  socket.on("ConfigureAtmega", async (data) => {
     //Guarda el socket del ATMEGA
     console.log("[CONFIGURADO]");
     arduino.socket.set(data.now, socket);
     console.log(data.now);
+    const arduinoCode = await Arduino.find({ idArduino: data.now });
+    const user = await User.findById(arduinoCode.userRegisterID);
+    const pins = await Pin.find({ userID: user._id });
+    pins.map((e) => {
+      socket.emit("[CONFIGUREPIN]", `[CONFIGUREPIN],${e.typeUse}/@/${e.pin}`);
+    });
   });
 
   socket.on("SwitchChange", async function (data) {
@@ -142,7 +148,7 @@ const UpdateValue = async (value, arduinoID, ID) => {
     let socketEmit = arduino.socket.get(arduinoID);
 
     try {
-      socketEmit?.emit(value);
+      socketEmit?.emit(`[Command],${value}`);
     } catch (error) {
       socketEmit?.emit("disconnect");
       arduino.socket.delete(arduinoID);

@@ -21,7 +21,6 @@ module.exports = {
       const arduinoExist = await arduinoCodeModel.findOne({
         idArduino: arduinoID,
       });
-
       if (!arduinoExist)
         return res.status(200).json({
           error: "Este codigo de arduino no existe. Intentelo nuevamente",
@@ -38,6 +37,10 @@ module.exports = {
         password: bcrypt.hashSync(password, 10),
         arduinoID: arduinoExist,
       });
+      await arduinoCodeModel.updateOne(
+        { idArduino: arduinoID },
+        { use: true, userRegisterId: user }
+      );
 
       const document = await user.save();
       return res

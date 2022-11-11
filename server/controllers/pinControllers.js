@@ -16,6 +16,35 @@ module.exports = {
       const user = await User.findById(userID);
       if (!user) return res.status(200).json({ error: "User not found" });
 
+      if (typeUse == "DHT11") {
+        if (pin >= 5 && pin <= 9) {
+          const pins = await Pin.find({ userID: userID, typeUse: typeUse });
+          if (pins.length > 5) {
+            return res
+              .status(200)
+              .json({ error: "Alcanzaste el maximo de DHT11" });
+          }
+        } else {
+          return res
+            .status(200)
+            .json({ error: "Los pines validos para el DHT11 son del 5 al 9" });
+        }
+      }
+      if (typeUse == "DHT22") {
+        if (pin >= 0 && pin <= 4) {
+          const pins = await Pin.find({ userID: userID, typeUse: typeUse });
+          if (pins.length > 5) {
+            return res
+              .status(200)
+              .json({ error: "Alcanzaste el maximo de DHT22" });
+          }
+        } else {
+          return res
+            .status(200)
+            .json({ error: "Los pines validos para el DHT22 son del 0 al 4" });
+        }
+      }
+
       const verifyPin = await Pin.findOne({ userID: userID, pin: pin });
       if (verifyPin)
         return res.status(200).json({ error: `Este pin ya esta en uso` });
