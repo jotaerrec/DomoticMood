@@ -1,0 +1,32 @@
+.loaderBackground {
+  width: 100%;
+  height: 80%;
+  position: relative; /* Cambiamos de absolute a relative */
+  background-color: #eaeaea00;
+  z-index: 9999;
+  .loader {
+    border: 16px solid #fb30fe3f;
+    border-top: 16px solid #c700fe;
+    border-bottom: 16px solid #c700fe;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1.5s linear infinite;
+    position: absolute; /* cambiamos de fixed a absolute */
+    /* Ponemos el valor de left, bottom, right y top en 0 */
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    margin: auto; /* Centramos vertical y horizontalmente */
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

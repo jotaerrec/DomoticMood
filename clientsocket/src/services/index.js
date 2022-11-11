@@ -1,6 +1,30 @@
 import { URL_API } from "Context/types";
 import axios from "axios";
 
+export const loginUser = async (data) => {
+  let res = await axios({
+    url: URL_API + "/users/",
+    method: "post",
+    timeout: 8000,
+    headers: { "Content-Type": "application/json" },
+    data: data,
+  });
+  return res;
+};
+
+export const newUser = async (data) => {
+  let res = await axios({
+    url: URL_API + "/users/register",
+    method: "post",
+    timeout: 8000,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: data,
+  });
+  return res;
+};
+
 export const validateToken = async () => {
   let res = await axios({
     url: URL_API + "/validateToken/",
@@ -52,30 +76,6 @@ export const getPins = async (room = "") => {
       "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
       room,
     },
-  });
-  return res;
-};
-
-export const loginUser = async (data) => {
-  let res = await axios({
-    url: URL_API + "/users/",
-    method: "post",
-    timeout: 8000,
-    headers: { "Content-Type": "application/json" },
-    data: data,
-  });
-  return res;
-};
-
-export const newUser = async (data) => {
-  let res = await axios({
-    url: URL_API + "/users/register",
-    method: "post",
-    timeout: 8000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data: data,
   });
   return res;
 };

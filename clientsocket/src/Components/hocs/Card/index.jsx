@@ -76,7 +76,7 @@ export const Card = () => {
     //Verificar token
     if (token && typeof token !== "undefined") {
       try {
-        let res = validateToken();
+        let res = await validateToken();
         if (res.status !== 202) {
           localStorage.removeItem("x-access-token");
           return setDisplayName(
