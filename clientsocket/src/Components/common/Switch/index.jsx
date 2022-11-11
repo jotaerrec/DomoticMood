@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import socket from "../../../Controllers/socketapi";
-import axios from "axios";
-import { URL_API } from "../../../context/types";
+import { updatePins } from "Services/";
+import { updateImportant } from "../../../services";
 
 export const Switch = ({ data }) => {
   // Variables
@@ -17,23 +17,9 @@ export const Switch = ({ data }) => {
     //Sacar o poner en destacado
     try {
       // Petición a api
-      let res = await axios({
-        url: URL_API + "/pins/important",
-        method: "post",
-        timeout: 8000,
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
-        },
-        data: {
-          pin: data.order,
-          name: tittle,
-          important: !important,
-        },
-      });
+      let res = await updateImportant(data.order, tittle, !important);
 
       if (res.status !== 202) {
-        //Hubo un error
         return setResponse({ error: res.data.error });
       }
 
@@ -72,22 +58,11 @@ export const Switch = ({ data }) => {
       )}`
     );
   };
+
   const updateTittle = async () => {
     //Actualizar nombre
     try {
-      let res = await axios({
-        url: URL_API + "/pins/",
-        method: "put",
-        timeout: 8000,
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
-        },
-        data: {
-          pin: data.order,
-          name: tittle,
-        },
-      });
+      let res = await updatePins(data.order, tittle);
       if (res.status === 202) {
         setResponse({ error: "" });
         setEdit(false);

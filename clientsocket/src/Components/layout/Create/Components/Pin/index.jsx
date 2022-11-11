@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
-import axios from "axios";
-import { URL_API } from "Context/types";
+import { newPin } from "Services/";
 
 const FormPin = () => {
   //Variables
@@ -51,17 +50,7 @@ const FormPin = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      let res = await axios({
-        url: URL_API + "/pins/",
-        method: "post",
-        timeout: 8000,
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
-        },
-        data: data,
-      });
-      console.log(res);
+      let res = await newPin(data);
       if (res.status < 400 && !res.data.error) {
         // test for status you want, etc
         setResponse({ error: "" });
@@ -107,8 +96,8 @@ const FormPin = () => {
             <option value="" disabled selected hidden>
               Tipo de pin
             </option>
-            <option value="false">OUTPUT</option>
-            <option value="true">INPUT</option>
+            <option value="false">Salida</option>
+            <option value="true">Entrada</option>
           </select>
         </div>
       </div>
@@ -124,8 +113,12 @@ const FormPin = () => {
               <option value="" disabled selected hidden>
                 Tipo de uso
               </option>
-              <option value="dht">DHT</option>
-              <option value="dimmer">Dimmer</option>
+              <option value="dht11">DHT11</option>
+              <option value="dht22">DHT11</option>
+              <option value="mq2">MQ2</option>
+              <option value="higrometro">HIGROMETRO</option>
+              <option value="llama">Sensor llama</option>
+              <option value="pir">PIR</option>
             </select>
           </div>
         </div>

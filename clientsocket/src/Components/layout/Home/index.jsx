@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
-import axios from "axios";
 import { Switch } from "Common/Switch";
 import { Slider } from "Common/Slider";
 import { Sensor } from "Common/Sensor";
-import { URL_API } from "Context/types";
+import { getPins } from "Services/";
 
 export const HomeCard = () => {
   //Variables
@@ -15,15 +14,7 @@ export const HomeCard = () => {
   const getElements = async () => {
     //Obtener elementos
     try {
-      let res = await axios({
-        url: URL_API + "/pins/",
-        method: "get",
-        timeout: 4000,
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
-        },
-      });
+      let res = await getPins();
       if (res.status === 202) {
         if (res.data.pins.length === 0) {
           setData("");

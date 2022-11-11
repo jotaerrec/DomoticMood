@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
-import axios from "axios";
-import { URL_API } from "Context/types";
+import { newRoom } from "Services/";
 
 const FormRoom = () => {
   //Varialbes
@@ -19,16 +18,8 @@ const FormRoom = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      let res = await axios({
-        url: URL_API + "/rooms/",
-        method: "post",
-        timeout: 8000,
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
-        },
-        data: data,
-      });
+      let res = await newRoom(data);
+
       if (res.status === 201) {
         setResponse(res.data);
         localStorage.setItem("rooms", JSON.stringify(res.data.rooms));

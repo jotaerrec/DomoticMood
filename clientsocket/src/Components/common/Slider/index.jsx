@@ -1,7 +1,5 @@
 import React, { useRef, useState } from "react";
 import styles from "./styles.module.scss";
-import socket from "../../../Controllers/socketapi";
-import { URL_API } from "../../../context/types";
 
 export const Slider = ({ data }) => {
   const [Value, setValue] = useState(data.value);

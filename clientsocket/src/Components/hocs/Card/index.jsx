@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import axios from "axios";
 import { CardMenu } from "Layout/Menu/";
 import { HomeCard } from "Layout/Home/";
 import { AddScreen } from "Layout/Create/";
@@ -11,7 +10,7 @@ import { ScreenContext } from "Context/Screen/ScreenContext";
 import { HOME, MENU, LOGIN, ADDSCREEN, PROFILE } from "Context/types";
 import styles from "./styles.module.scss";
 import TopCard from "Common/Nav";
-import { URL_API } from "Context/types";
+import { validateToken } from "Services/index.js";
 
 export const Card = () => {
   // Variables
@@ -77,18 +76,7 @@ export const Card = () => {
     //Verificar token
     if (token && typeof token !== "undefined") {
       try {
-        let res = await axios({
-          url: URL_API + "/validateToken/",
-          method: "get",
-          timeout: 4000,
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token": JSON.parse(
-              localStorage.getItem("x-access-token")
-            ),
-          },
-        });
-
+        let res = validateToken();
         if (res.status !== 202) {
           localStorage.removeItem("x-access-token");
           return setDisplayName(

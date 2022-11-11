@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
-import axios from "axios";
 import { Switch } from "Common/Switch";
 import { Slider } from "Common/Slider";
-import { URL_API } from "Context/types";
+import { getPins } from "../../../services";
 
 export const CardScreen = ({ screen }) => {
   //Variables
@@ -17,19 +16,9 @@ export const CardScreen = ({ screen }) => {
   const getElements = async () => {
     //Obtiene elementos
     try {
-      let res = await axios({
-        url: URL_API + "/pins/",
-        method: "get",
-        timeout: 8000,
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
-          room: screen,
-        },
-      });
+      let res = await getPins(screen);
       //Verifica que devuelva los elementos
       if (res.status === 202) {
-        console.log("hola");
         if (res.data.pins.length === 0) {
           setData("");
 

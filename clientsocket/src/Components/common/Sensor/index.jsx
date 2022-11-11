@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./styles.module.scss";
-import axios from "axios";
 import socket from "Controllers/socketapi";
-import { URL_API } from "../../../context/types";
 import Speedometer, { Indicator, Progress, Arc } from "react-speedometer";
+import { updatePins } from "Services/";
 
 export const Sensor = ({ data }) => {
   //Variables
@@ -24,20 +23,7 @@ export const Sensor = ({ data }) => {
   const updateTittle = async () => {
     //Actualizar Nombre
     try {
-      let res = await axios({
-        url: URL_API + "/pins/",
-        method: "put",
-        timeout: 8000,
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": JSON.parse(localStorage.getItem("x-access-token")),
-        },
-        data: {
-          pin: data.order,
-          name: tittle,
-        },
-      });
-      console.log(res);
+      let res = await updatePins(data.order, tittle);
       if (res.status === 202) {
         // test for status you want, etc
         setResponse({ error: "" });

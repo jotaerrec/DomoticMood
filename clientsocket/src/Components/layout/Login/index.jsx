@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
-import axios from "axios";
-import { URL_API } from "Context/types";
 import socket from "Controllers/socketapi";
+import { loginUser, newUser } from "Services/";
 
 export const LoginCard = ({ args }) => {
   //Variables
@@ -37,13 +36,7 @@ export const LoginCard = ({ args }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      let res = await axios({
-        url: URL_API + "/users/",
-        method: "post",
-        timeout: 8000,
-        headers: { "Content-Type": "application/json" },
-        data: data,
-      });
+      let res = await loginUser();
       if (!res.data.error && res.status === 202) {
         //Verifica que no haya error
         localStorage.setItem("rooms", "[]");
@@ -64,15 +57,7 @@ export const LoginCard = ({ args }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      let res = await axios({
-        url: URL_API + "/users/register",
-        method: "post",
-        timeout: 8000,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: data,
-      });
+      let res = await newUser(data);
       if (res.status === 201) {
         return tokenResponse(res.data.token);
       }
