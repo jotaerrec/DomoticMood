@@ -1,3 +1,4 @@
+
 #include <SoftwareSerial.h>
 #include<EEPROM.h>
 #include <DHT.h>
@@ -72,28 +73,28 @@ void loop() {
         pin = String(DHT22_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       } else if(DHT22_pins[i] == 2){
         hum = dht22_2.readHumidity();
         temp= dht22_2.readTemperature();
         pin = String(DHT22_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       }else if(DHT22_pins[i] == 3){
         hum = dht22_3.readHumidity();
         temp= dht22_3.readTemperature();
         pin = String(DHT22_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       }else if(DHT22_pins[i] == 4){
         hum = dht22_4.readHumidity();
         temp= dht22_4.readTemperature();
         pin = String(DHT22_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       }
     }
     previousTime_DHT22 = currentTime;
@@ -106,35 +107,35 @@ void loop() {
         pin = String(DHT11_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       }else if(DHT11_pins[i] == 6){
         hum = dht11_6.readHumidity();
         temp= dht11_6.readTemperature();
         pin = String(DHT11_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       } else if(DHT11_pins[i] == 7){
         hum = dht11_7.readHumidity();
         temp= dht11_7.readTemperature();
         pin = String(DHT11_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       }else if(DHT11_pins[i] == 8){
         hum = dht11_8.readHumidity();
         temp= dht11_8.readTemperature();
         pin = String(DHT11_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       }else if(DHT11_pins[i] == 9){
         hum = dht11_9.readHumidity();
         temp= dht11_9.readTemperature();
         pin = String(DHT11_pins[i]);
         humedad = String(hum);
         temperatura = String(temp);
-        Serial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
+        SoftSerial.println(String("[SEND],DHT/@/"+pin+"/@/"+humedad+"/@/"+temperatura));  
       }
     }
     previousTime_DHT11 = currentTime;
@@ -145,7 +146,7 @@ void loop() {
       if(digitalRead(HIGROMETRO_pins[i]) == HIGH)
         Serial.println(String("[SEND],HIGROMETRO/@/"+Pin_Higro+"/@/TRUE"));
       else 
-        Serial.println(String("[SEND],HIGROMETRO/@/"+Pin_Higro+"/@/FALSE"));
+        SoftSerial.println(String("[SEND],HIGROMETRO/@/"+Pin_Higro+"/@/FALSE"));
     }
     previousTime_HIGROMETRO = currentTime;
   }
@@ -153,18 +154,18 @@ void loop() {
     for(int i = 0; i<LLAMA_index; i++){
       String Pin_LLAMA = String(LLAMA_pins[i]);
       if(digitalRead(LLAMA_pins[i]) == HIGH)
-        Serial.println(String("[SEND],LLAMA/@/"+Pin_LLAMA+"/@/TRUE"));
+        SoftSerial.println(String("[SEND],LLAMA/@/"+Pin_LLAMA+"/@/TRUE"));
       else 
-        Serial.println(String("[SEND],LLAMA/@/"+Pin_LLAMA+"/@/FALSE"));
+        SoftSerial.println(String("[SEND],LLAMA/@/"+Pin_LLAMA+"/@/FALSE"));
     }
     previousTime_LLAMA = currentTime;
   }  if(PIR_index>0 && (currentTime-previousTime_PIR>30000)){
     for(int i = 0; i<PIR_index; i++){
       String Pin_PIR = String(PIR_pins[i]);
       if(digitalRead(PIR_pins[i]) == HIGH)
-        Serial.println(String("[SEND],PIR/@/"+Pin_PIR+"/@/TRUE"));
+        SoftSerial.println(String("[SEND],PIR/@/"+Pin_PIR+"/@/TRUE"));
       else 
-        Serial.println(String("[SEND],PIR/@/"+Pin_PIR+"/@/FALSE"));
+        SoftSerial.println(String("[SEND],PIR/@/"+Pin_PIR+"/@/FALSE"));
     }
     previousTime_PIR = currentTime;
   }  
@@ -172,15 +173,15 @@ void loop() {
     for(int i = 0; i<MQ2_index; i++){
       float value = analogRead( atoi(MQ2_pins[i].substring(0, 2).c_str()));
       String Value_MQ2 = String(value);
-      Serial.println(String("[SEND],MQ2/@/"+MQ2_pins[i]+"/@/"+Value_MQ2));
+      SoftSerial.println(String("[SEND],MQ2/@/"+MQ2_pins[i]+"/@/"+Value_MQ2));
     }
     previousTime_MQ2 = currentTime;
   }
 
   
-  if (Serial.available())
+  if (SoftSerial.available())
   {
-    String data = Serial.readStringUntil('\n');
+    String data = SoftSerial.readStringUntil('\n');
     DEBUG(data);
 
     int index = data.indexOf(',');
