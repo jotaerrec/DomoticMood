@@ -20,7 +20,7 @@ require("dotenv").config();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.set("secretKey", process.env.SECRETKEY);
+app.set("secretKey", "DOMOTICMOOD");
 app.use(logger("dev"));
 app.use(cors());
 app.use(express.json());

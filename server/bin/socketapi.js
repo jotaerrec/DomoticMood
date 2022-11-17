@@ -23,7 +23,7 @@ io.on("connection", function (socket) {
     data = data?.substr(1, data.length - 2);
 
     let user = {};
-    await jwt.verify(data, process.env.SECRETKEY, function (err, decoded) {
+    await jwt.verify(data, "DOMOTICMOOD", function (err, decoded) {
       if (err) {
         console.log("No se pudo verificar");
       } else {
@@ -50,7 +50,9 @@ io.on("connection", function (socket) {
     arduino.socket.set(data.now, socket);
     console.log(data.now);
     const arduinoCode = await Arduino.find({ idArduino: data.now });
+    console.log(arduinoCode);
     const user = await User.findById(arduinoCode.userRegisterID);
+    console.log(user);
     const pins = await Pin.find({ userID: user._id });
     pins.map((e) => {
       socket.emit("[CONFIGUREPIN]", `[CONFIGUREPIN],${e.typeUse}/@/${e.pin}`);
@@ -66,7 +68,7 @@ io.on("connection", function (socket) {
 
       console.log(value[0]);
 
-      jwt.verify(value[1], process.env.SECRETKEY, function (err, decoded) {
+      jwt.verify(value[1], "DOMOTICMOOD", function (err, decoded) {
         if (err) {
           console.log(err);
         } else {
