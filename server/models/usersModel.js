@@ -25,15 +25,13 @@ const userSchema = new mongoose.Schema({
   },
 
   arduinoID: {
-    type: mongoose.Schema.ObjectId,
-    ref: "arduinoCode",
+    type: String,
   },
 
   rooms: {
     type: [String],
   },
 });
-
 userSchema.statics.findBydIdAndValidate = async function (id) {
   const document = await this.findById(id);
   if (!document) {

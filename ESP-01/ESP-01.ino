@@ -14,7 +14,7 @@ String pral = "<html>"
               "<title>WIFI CONFIG</title><style type='text/css'>body,td,th{ color:#036; } body{background-color:#999;}</style></head>"
               "<body>"
               "<h1> WIFI CONF</hl><br>"
-              "<form action='config' method='get' target='pantalla' id='form'><fieldset align='left' style='border-style:solid;border-color:#336666;width:200px;height:180px;padding:10px;margin:5px;'><legend><strong>Contifurar WI-FI</strong></legend>SSID:<br><input name='ssid' type='text' size='15'><br> <br>PASSWORD:<br><input name='pass' type='password' size='15'><input type='submit' value='Conectar'></fieldset></form>"
+              "<form action='config' method='get' target='pantalla' id='form'><fieldset align='left' style='border-style:solid;border-color:#336666;width:200px;height:180px;padding:10px;margin:5px;'><legend><strong>Contifurar WI-FI</strong></legend>SSID:<br><input name='ssid' type='text' size='15'><br> <br>PASSWORD:<br><input name='pass' type='password' size='15'><br>HOST:<br><br><input name='host' type='text' size='40'><input type='submit' value='Conectar'></fieldset></form>"
               "<iframe id='pantalla'name='pantalla'src='' width=900px height-400px frameborder='0'scrolling='no'></iframe>"
               "</body>"
               "</html>";
@@ -25,7 +25,9 @@ ESP8266WebServer server(80);
 /// WIFI Settings ///
 char ssid[30];
 char pass[30];
-const char* host = "192.168.1.39";
+String ssidLeido;
+String passLeido;
+const char* host = "192.168.150.157";
 int port = 8080; // Socket.IO Port Address
 const char* path = "/socket.io/?EIO=4";
 int indexNetwork;
@@ -104,7 +106,6 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
 }
 void setup() {
   USE_SERIAL.begin(9600);
-  USE_SERIAL.setDebugOutput(true);
   USE_SERIAL.println();
   USE_SERIAL.println();
   USE_SERIAL.println();
@@ -123,9 +124,6 @@ void setup() {
   server.begin();
   USE_SERIAL.println("...");
   USE_SERIAL.println("[WEBSERVER] Iniciado ...");
-
-  socketIO.begin(host, 8080, path);
-  socketIO.onEvent(socketIOEvent);
 }
 
 unsigned long messageTimestamp = 0;
@@ -137,16 +135,17 @@ void loop() {
     int dataLength = data.length();
     String command = data.substring(0, index);
     String subS = data.substring(index + 1, dataLength);
-
-    if (command == "[CONFIG]") {
-      indexNetwork  = subS.indexOf("/@/");
-      String ssid = subS.substring(0, indexNetwork);
-      subS = subS.substring(indexNetwork + 3, subS.length());
-      indexNetwork = subS.indexOf("/@/");
-      String pass = subS.substring(0, indexNetwork);
-      intento_conexion(ssid, pass);
+    Serial.print(command);
+    if (command == "[CONFIGSSID]") {
+      ssidLeido= subS;
+      Serial.println(ssidLeido);
+    }else if(command == "[CONFIGPASS]"){
+      passLeido= subS;
+      Serial.println(passLeido);
+      intento_conexion(ssidLeido, passLeido);
     } else if ( command == "[SEND}") {
       emitSocket("[SEND]" , subS);
+      Serial.println(subS);
     }
 
   }
@@ -193,13 +192,12 @@ void intento_conexion (String ssid_leido, String pass_leido) {
     cuenta++;
     USE_SERIAL.println(cuenta);
     if (cuenta > 20) {
-      server.send(200, "text/html", String("<h2>Error! No se pudo conectar a:" + ssid_leido + "</h2><br> "));
-      USE_SERIAL.println("[NOCONNECT]");
+      USE_SERIAL.println("[NOCONNECT],");
       return;
     }
   }
   if (WiFi.status() == WL_CONNECTED) {
-    USE_SERIAL.print("[CONNECT SUCCESSFULL]:");
+    USE_SERIAL.print("[CONNECT SUCCESSFULL],");
     USE_SERIAL.println(ssid);
     socketIO.begin(host, 8080, path);
     socketIO.onEvent(socketIOEvent);
@@ -210,8 +208,10 @@ void wifi_conf() {
   int cuenta = 0;
   String getssid = server.arg("ssid");// recibo los valores que envia por ger el formulario web
   String getpass = server.arg("pass");
+  String gethost = server.arg("host");
   getssid = arregla_simbolos(getssid); // reemplazo los simbolos que aparecen con UTFS con el simbolo correcto
   getpass = arregla_simbolos(getpass);
+  gethost = arregla_simbolos(gethost);
   int ssid_tamano = getssid.length() + 1; // calculamos la cantidad de caracteres que tiene el ssidyla clave
   int pass_tamano = getpass.length() + 1;
   getssid.toCharArray(ssid, ssid_tamano); // tabsformatos el string en un char array ya que es lo que nos pide
@@ -222,7 +222,7 @@ void wifi_conf() {
     USE_SERIAL.println(".");
     cuenta++;
     if (cuenta > 20) {
-      USE_SERIAL.println("[NOCONNECT]");
+      USE_SERIAL.println("[NOCONNECT],");
       server.send(200, "text/html", String("<h2>Error! No se pudo conectar a:" + getssid + "</h2><br> "));
       return ;
     }
@@ -231,7 +231,7 @@ void wifi_conf() {
   USE_SERIAL.print(getssid);
   USE_SERIAL.print("/@/");
   USE_SERIAL.println(getpass);
-  socketIO.begin(host, 8080, path);
+  socketIO.begin(gethost, 8080, path);
   socketIO.onEvent(socketIOEvent);
   server.send(200, "text/html", String("<h2>Bien !!!! Conexion Exitosa a :" + getssid + "</h2><br> "));
 }

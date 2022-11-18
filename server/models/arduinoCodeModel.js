@@ -14,8 +14,8 @@ const arduinoCodeSchema = new mongoose.Schema({
   },
 
   userRegisterID: {
-    type: mongoose.Schema.ObjectId,
-    ref: "users",
+    type: String,
+    default: "",
   },
 });
 module.exports = mongoose.model("arduinoCode", arduinoCodeSchema);

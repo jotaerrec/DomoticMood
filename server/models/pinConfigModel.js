@@ -15,8 +15,7 @@ const pinConfigSchema = new mongoose.Schema({
   },
 
   userID: {
-    type: mongoose.Schema.ObjectId,
-    ref: "users",
+    type: String,
   },
 
   //OUTPUT[FALSE] OR INPUT[TRUE]

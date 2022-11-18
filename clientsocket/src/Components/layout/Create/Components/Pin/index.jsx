@@ -123,7 +123,7 @@ const FormPin = () => {
                     Tipo de uso
                   </option>
                   <option value="dht11">DHT11</option>
-                  <option value="dht22">DHT11</option>
+                  <option value="dht22">DHT22</option>
                   <option value="mq2">MQ2</option>
                   <option value="higrometro">HIGROMETRO</option>
                   <option value="llama">Sensor llama</option>
@@ -144,7 +144,6 @@ const FormPin = () => {
                     Tipo de uso
                   </option>
                   <option value="relay">Relay</option>
-                  <option value="alarm">Alarma</option>
                 </select>
               </div>
             </div>

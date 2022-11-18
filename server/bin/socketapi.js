@@ -48,17 +48,21 @@ io.on("connection", function (socket) {
     //Guarda el socket del ATMEGA
     console.log("[CONFIGURADO]");
     arduino.socket.set(data.now, socket);
+    arduino.code.set(socket, data.now);
     console.log(data.now);
-    const arduinoCode = await Arduino.find({ idArduino: data.now });
+    const arduinoCode = await Arduino.findOne({ idArduino: data.now });
     console.log(arduinoCode);
-    const user = await User.findById(arduinoCode.userRegisterID);
-    console.log(user);
-    const pins = await Pin.find({ userID: user._id });
-    pins.map((e) => {
-      socket.emit("[CONFIGUREPIN]", `[CONFIGUREPIN],${e.typeUse}/@/${e.pin}`);
-    });
+    if (arduinoCode.use == true) {
+      const user = await User.find({
+        arduinoID: arduinoCode.idArduino,
+      });
+      console.log(user);
+      const pins = await Pin.find({ userID: user.id });
+      pins?.map((e) => {
+        socket.emit("[CONFIGUREPIN]", `[CONFIGUREPIN],${e.typeUse}/@/${e.pin}`);
+      });
+    }
   });
-
   socket.on("SwitchChange", async function (data) {
     //Obtiene el cambio de valores recibidos desde el cliente
     try {
@@ -101,6 +105,23 @@ io.on("connection", function (socket) {
         SocketUsers.map(async (e, i) => {
           if (e.connected) e.emit(`SensorValue=${pin}`, value);
         });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  socket.on("[SEND]", async function name(params) {
+    try {
+      let token = arduino.code.get(socket);
+      arduinoCode = await Arduino.findOne({ idArduino: token });
+      if (arduinoCode) {
+        let user = await User.findOne({ arduinoID: arduinoCode.idArduino });
+        let socketUsers = Users.get(user.id);
+        if (socketUsers.length > 0) {
+          SocketUsers.map(async (e, i) => {
+            if (e.connected) e.emit(`SensorValue=${pin}`, value);
+          });
+        }
       }
     } catch (error) {
       console.log(error);

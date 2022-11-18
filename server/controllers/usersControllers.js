@@ -35,11 +35,11 @@ module.exports = {
         name: username,
         email: email,
         password: bcrypt.hashSync(password, 10),
-        arduinoID: arduinoExist,
+        arduinoID: arduinoExist.idArduino,
       });
       await arduinoCodeModel.updateOne(
         { idArduino: arduinoID },
-        { use: true, userRegisterId: user }
+        { use: true, userRegisterID: email }
       );
 
       const document = await user.save();
