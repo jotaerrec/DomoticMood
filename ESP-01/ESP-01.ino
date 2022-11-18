@@ -14,7 +14,7 @@ String pral = "<html>"
               "<title>WIFI CONFIG</title><style type='text/css'>body,td,th{ color:#036; } body{background-color:#999;}</style></head>"
               "<body>"
               "<h1> WIFI CONF</hl><br>"
-              "<form action='config' method='get' target='pantalla' id='form'><fieldset align='left' style='border-style:solid;border-color:#336666;width:200px;height:180px;padding:10px;margin:5px;'><legend><strong>Contifurar WI-FI</strong></legend>SSID:<br><input name='ssid' type='text' size='15'><br> <br>PASSWORD:<br><input name='pass' type='password' size='15'><br>HOST:<br><br><input name='host' type='text' size='40'><input type='submit' value='Conectar'></fieldset></form>"
+              "<form action='config' method='get' target='pantalla' id='form'><fieldset align='left' style='border-style:solid;border-color:#336666;width:200px;height:180px;padding:10px;margin:5px;'><legend><strong>Contifurar WI-FI</strong></legend>SSID:<br><input name='ssid' type='text' size='15'><br> <br>PASSWORD:<br><input name='pass' type='password' size='15'><input type='submit' value='Conectar'></fieldset></form>"
               "<iframe id='pantalla'name='pantalla'src='' width=900px height-400px frameborder='0'scrolling='no'></iframe>"
               "</body>"
               "</html>";
@@ -27,7 +27,7 @@ char ssid[30];
 char pass[30];
 String ssidLeido;
 String passLeido;
-const char* host = "192.168.150.157";
+const char* host = "35.247.216.65";
 int port = 8080; // Socket.IO Port Address
 const char* path = "/socket.io/?EIO=4";
 int indexNetwork;
@@ -208,10 +208,8 @@ void wifi_conf() {
   int cuenta = 0;
   String getssid = server.arg("ssid");// recibo los valores que envia por ger el formulario web
   String getpass = server.arg("pass");
-  String gethost = server.arg("host");
   getssid = arregla_simbolos(getssid); // reemplazo los simbolos que aparecen con UTFS con el simbolo correcto
   getpass = arregla_simbolos(getpass);
-  gethost = arregla_simbolos(gethost);
   int ssid_tamano = getssid.length() + 1; // calculamos la cantidad de caracteres que tiene el ssidyla clave
   int pass_tamano = getpass.length() + 1;
   getssid.toCharArray(ssid, ssid_tamano); // tabsformatos el string en un char array ya que es lo que nos pide
@@ -231,7 +229,7 @@ void wifi_conf() {
   USE_SERIAL.print(getssid);
   USE_SERIAL.print("/@/");
   USE_SERIAL.println(getpass);
-  socketIO.begin(gethost, 8080, path);
+  socketIO.begin(host, 8080, path);
   socketIO.onEvent(socketIOEvent);
   server.send(200, "text/html", String("<h2>Bien !!!! Conexion Exitosa a :" + getssid + "</h2><br> "));
 }
